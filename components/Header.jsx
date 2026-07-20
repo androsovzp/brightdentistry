@@ -153,15 +153,15 @@ export default function Header() {
             
             {/* Phone button */}
             <a
-              href="tel:+380970000000"
+              href="tel:+380732762627"
               className="hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-full text-slate-700 hover:text-brand-600 hover:bg-rose-50 transition-all text-xs font-medium border border-rose-100"
             >
               <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center">
                 <Phone className="w-3.5 h-3.5" />
               </div>
               <div className="text-left">
-                <div className="text-[10px] text-slate-400 leading-none">Консультація</div>
-                <div className="font-bold text-slate-800 text-xs mt-0.5">+380 97 000 00 00</div>
+                <div className="text-[10px] text-slate-400 leading-none">Консультація (Вінниця)</div>
+                <div className="font-bold text-slate-800 text-xs mt-0.5">+380 (73) 276-26-27</div>
               </div>
             </a>
 

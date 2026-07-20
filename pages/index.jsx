@@ -4,7 +4,7 @@ import Hero from '@/components/Hero';
 import CategoryCard from '@/components/CategoryCard';
 import ProductCard from '@/components/ProductCard';
 import { getProducts, getCategories } from '@/lib/data';
-import { ArrowRight, Sparkles, ShieldCheck, HeartPulse, Stethoscope, Star } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, HeartPulse, Stethoscope, Star, MapPin, Clock } from 'lucide-react';
 
 export async function getStaticProps() {
   const products = getProducts();
@@ -95,22 +95,33 @@ export default function Home({ categories, featuredProducts }) {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
               <div className="inline-flex items-center gap-2 bg-brand-500/30 text-brand-300 px-3.5 py-1 rounded-full text-xs font-bold border border-brand-500/30">
-                <Stethoscope className="w-4 h-4" /> Експертний підбір від Bright Dentistry
+                <Stethoscope className="w-4 h-4" /> Стоматологічна клініка Bright Dentistry (м. Вінниця)
               </div>
               <h3 className="font-heading font-extrabold text-2xl sm:text-4xl leading-snug">
-                Не впевнені, яку зубну пасту чи щітку обрати?
+                Потрібна консультація чи запис на прийом?
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
-                Наші лікарі-стоматологи допоможуть індивідуально підібрати засоби гігієни залежно від стану вашої емалі, чутливості зубів або віку дитини.
+                Завітайте до нашої клініки за адресою <strong>вул. Івана Богуна, 2 (П'ятничани)</strong> або отримайте підбір доглядових засобів за номером <strong>073 276 2627</strong>.
               </p>
+              
+              <div className="pt-2 flex flex-wrap gap-4 text-xs text-slate-300">
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <MapPin className="w-3.5 h-3.5 text-brand-400" />
+                  <span>м. Вінниця, вул. Івана Богуна, 2</span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
+                  <Clock className="w-3.5 h-3.5 text-brand-400" />
+                  <span>Пн-Пт: 09:00-19:00 | Сб-Нд: 09:00-16:00</span>
+                </div>
+              </div>
             </div>
 
             <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-4 justify-center">
               <a
-                href="tel:+380970000000"
+                href="tel:+380732762627"
                 className="px-6 py-3.5 bg-brand-500 hover:bg-brand-600 text-white rounded-2xl font-extrabold text-xs text-center transition-all shadow-pink-glow"
               >
-                📞 Зателефонувати лікарю
+                📞 073 276 2627 (Зателефонувати)
               </a>
               <Link
                 href="/catalog/Мінералізація"

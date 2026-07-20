@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Phone, Mail, MapPin, ShieldCheck, Truck, Sparkles, Heart, CreditCard } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, Truck, Sparkles, Heart, CreditCard, Clock, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -138,25 +138,39 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Contacts & Payment */}
+          {/* Col 4: Contacts & Location */}
           <div>
             <h4 className="font-heading font-bold text-white text-sm uppercase tracking-wider mb-4 border-l-2 border-brand-500 pl-3">
-              Контакти
+              Контакти клініки
             </h4>
             <ul className="space-y-3 text-xs text-slate-400">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                <span>Україна, Стоматологічна клініка Bright Dentistry</span>
+                <span>м. Вінниця, вул. Івана Богуна, 2 (П'ятничани)</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-brand-400 shrink-0" />
-                <a href="tel:+380970000000" className="hover:text-white font-semibold">
-                  +380 (97) 000-00-00
+                <a href="tel:+380732762627" className="hover:text-white font-semibold">
+                  +380 (73) 276-26-27
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>info@bright-dentistry.ua</span>
+              <li className="flex items-start gap-3">
+                <Clock className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-white font-medium">Пн – Пт: 09:00 – 19:00</div>
+                  <div className="text-slate-400">Сб – Нд: 09:00 – 16:00</div>
+                </div>
+              </li>
+              <li className="flex items-center gap-3 pt-1">
+                <Instagram className="w-4 h-4 text-brand-400 shrink-0" />
+                <a
+                  href="https://www.instagram.com/bright_dentistry.ua/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white font-semibold text-brand-300 underline"
+                >
+                  @bright_dentistry.ua
+                </a>
               </li>
             </ul>
 
