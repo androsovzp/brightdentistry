@@ -51,14 +51,11 @@ export default function CategoryPage({ categoryName, products, categories }) {
         {/* Category Header */}
         <div className="bg-gradient-to-r from-rose-100/80 via-rose-50 to-white rounded-3xl p-6 sm:p-8 border border-rose-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <span className="text-xs font-bold text-brand-600 uppercase tracking-wider bg-white px-3 py-1 rounded-full border border-rose-200">
-              Категорія товарів
-            </span>
-            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 mt-2">
+            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">
               {categoryName}
             </h1>
             <p className="text-xs text-slate-500 mt-1">
-              Знайдено <strong className="text-brand-600">{products.length}</strong> оригінальних найменувань
+              Знайдено <strong className="text-brand-600">{products.length}</strong> найменувань у цій категорії
             </p>
           </div>
 

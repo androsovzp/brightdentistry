@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { ShoppingBag, Search, Phone, Menu, X, Sparkles, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Search, Phone, Menu, X, ChevronRight } from 'lucide-react';
 import { useCart } from '@/lib/store';
 import { searchProducts } from '@/lib/data';
 
@@ -54,15 +54,6 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full shadow-sm bg-white/95 backdrop-blur-md border-b border-rose-100">
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-brand-600 via-rosebrand-500 to-brand-500 text-white text-xs py-2 px-4 text-center font-medium flex items-center justify-center gap-2 shadow-inner">
-        <Sparkles className="w-3.5 h-3.5 animate-pulse text-amber-200" />
-        <span>Офіційний магазин клініки <strong>Bright Dentistry</strong> — Професійний догляд для всієї родини</span>
-        <span className="hidden md:inline-block bg-white/20 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold">
-          Доставка Новою Поштою
-        </span>
-      </div>
-
       {/* Main Header Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-4">

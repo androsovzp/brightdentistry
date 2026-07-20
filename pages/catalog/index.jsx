@@ -75,14 +75,11 @@ export default function CatalogPage({ products, categories }) {
         {/* Header Title Banner */}
         <div className="bg-gradient-to-r from-rose-100/70 via-rose-50 to-white rounded-3xl p-6 sm:p-8 border border-rose-100">
           <div className="max-w-2xl">
-            <span className="text-xs font-bold text-brand-600 uppercase tracking-wider bg-white px-3 py-1 rounded-full border border-rose-200">
-              Магазин Bright Dentistry
-            </span>
-            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900 mt-2">
-              Повний каталог гігієнічних засобів
+            <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-slate-900">
+              Каталог гігієнічних засобів
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-              Дитячі та дорослі зубні пасти, мануальні та міжзубні щітки, гелі ремінералізації та супер флоси з відправкою в День замовлення.
+              Оригінальні дитячі та дорослі зубні пасти, щітки, йоржики, гелі ремінералізації та засоби гігієни з клініки Bright Dentistry.
             </p>
           </div>
         </div>
