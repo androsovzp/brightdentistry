@@ -1,4 +1,5 @@
 import React from 'react';
+import Head from 'next/head';
 import Hero from '@/components/Hero';
 import CategoryCatalog from '@/components/CategoryCatalog';
 import InstagramSection from '@/components/InstagramSection';
@@ -20,7 +21,13 @@ export async function getStaticProps() {
 
 export default function Home({ products }) {
   return (
-    <div className="space-y-12 pb-16">
+    <>
+      <Head>
+        <title>Bright Dentistry — Головна | Стоматологічна клініка та онлайн-магазин (м. Вінниця)</title>
+      </Head>
+
+      <div className="space-y-12 pb-16">
+
       
       {/* 1. Sleek Minimalist Hero with Pink Tooth Magic Card */}
       <Hero />
@@ -82,7 +89,9 @@ export default function Home({ products }) {
       </section>
 
     </div>
+    </>
   );
 }
+
 
 
