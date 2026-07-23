@@ -2,7 +2,6 @@ import React from 'react';
 import Head from 'next/head';
 import Hero from '@/components/Hero';
 import CategoryCatalog from '@/components/CategoryCatalog';
-import InstagramSection from '@/components/InstagramSection';
 import { getProducts, getCategories } from '@/lib/data';
 import { MapPin, Clock, Phone, Stethoscope, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -29,16 +28,14 @@ export default function Home({ products }) {
       <div className="space-y-12 pb-16">
 
       
-      {/* 1. Sleek Minimalist Hero with Pink Tooth Magic Card */}
+      {/* 1. Sleek Minimalist Hero */}
       <Hero />
 
       {/* 2. Visual Category Tiles Catalog */}
       <CategoryCatalog />
 
-      {/* 3. Instagram Aesthetic Gallery */}
-      <InstagramSection />
+      {/* 3. Clinic Consultation & Location Banner */}
 
-      {/* 4. Clinic Consultation & Location Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
           <div className="absolute right-0 top-0 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
