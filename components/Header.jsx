@@ -169,39 +169,34 @@ export default function Header() {
             )}
           </div>
 
-          {/* Contact Info & Interactive Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Contact Info & Cart */}
+          <div className="flex items-center gap-3">
             
-            {/* Pink Sparkle Mode Toggle */}
+            {/* Phone button for Vinnytsia */}
+            <a
+              href="tel:+380732762627"
+              className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-slate-700 hover:text-brand-600 hover:bg-rose-50 transition-all text-xs font-medium border border-rose-100"
+            >
+              <div className="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center">
+                <Phone className="w-3 h-3" />
+              </div>
+              <div className="text-left">
+                <div className="text-[10px] text-slate-400 leading-none">Вінниця</div>
+                <div className="font-bold text-slate-800 text-xs mt-0.5">073 276 2627</div>
+              </div>
+            </a>
+
+            {/* Sparkle Mode subtle icon toggle */}
             <button
               onClick={toggleSparkleMode}
-              className={`p-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border shadow-2xs ${
+              className={`p-2.5 rounded-full text-xs font-bold transition-all border shadow-2xs ${
                 isSparkleMode
                   ? 'bg-rose-100 text-brand-700 border-brand-300 hover:bg-rose-200'
-                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                  : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
               }`}
-              title="Перемикач Pink Sparkle Mode"
+              title={isSparkleMode ? 'Вимкнути рожеві бліки' : 'Увімкнути Pink Sparkle Mode'}
             >
-              <Wand2 className={`w-4 h-4 ${isSparkleMode ? 'text-brand-600 animate-bounce' : 'text-slate-400'}`} />
-              <span className="hidden xl:inline-block">Sparkle Mode</span>
-            </button>
-
-            {/* Quick Quiz Trigger Button */}
-            <button
-              onClick={() => setIsQuizOpen(true)}
-              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-xs border border-rose-200 transition-all hover:scale-105 active:scale-95"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-brand-500" />
-              <span>Рожевий квіз</span>
-            </button>
-
-            {/* Tooth Timer Trigger Button */}
-            <button
-              onClick={() => setIsTimerOpen(true)}
-              className="hidden xl:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-xs border border-rose-200 transition-all hover:scale-105 active:scale-95"
-            >
-              <Clock className="w-3.5 h-3.5 text-brand-500" />
-              <span>2-хв таймер</span>
+              <Wand2 className={`w-4 h-4 ${isSparkleMode ? 'text-brand-600' : 'text-slate-400'}`} />
             </button>
 
             {/* Cart Button */}
@@ -210,7 +205,7 @@ export default function Header() {
               className="relative p-2.5 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-full font-semibold text-xs flex items-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95 shrink-0"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span className="hidden sm:inline-block">Кошик</span>
+              <span className="hidden sm:inline-block font-bold">Кошик</span>
               {totalCount > 0 && (
                 <span className="bg-white text-brand-600 font-extrabold text-[11px] px-2 py-0.5 rounded-full min-w-[20px] text-center shadow-sm">
                   {totalCount}
