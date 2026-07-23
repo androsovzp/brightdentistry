@@ -5,57 +5,75 @@ import { ArrowRight } from 'lucide-react';
 export const CATEGORIES_DATA = [
   {
     name: 'Дитячі пасти',
-    icon: '👶',
+    icon: '👶🦷',
+    mascot: '🦷✨',
+    badge: 'Малюки & Підлітки',
     count: 16,
-    desc: 'Безпечні зубні пасти від 0 років зі смаками персика, суниці та винограду',
+    desc: 'Ніжні та безпечні зубні пасти від 0 років зі смаками персика, полуниці та винограду',
     brands: ['BioRepair Kids', 'Curaprox Kids'],
     badgeColor: 'bg-pink-100 text-pink-700 border-pink-200',
-    cardGradient: 'from-pink-50/60 to-rose-50/30 hover:border-pink-300',
+    cardGradient: 'from-pink-100/80 via-rose-50 to-white hover:border-pink-300 shadow-pink-soft',
+    decorEmoji: '🍓',
   },
   {
     name: 'Дорослі пасти',
-    icon: '✨',
+    icon: '✨🦷',
+    mascot: '🦷💎',
+    badge: 'Шик & Білосніжність',
     count: 20,
-    desc: 'Відновлення емалі, зняття чутливості та дбайливе відбілювання',
+    desc: 'Відновлення емалі, лікування чутливості та дбайливе відбілювання для ідеальної усмішки',
     brands: ['BioRepair', 'Curaprox'],
-    badgeColor: 'bg-sky-100 text-sky-700 border-sky-200',
-    cardGradient: 'from-sky-50/60 to-blue-50/30 hover:border-sky-300',
+    badgeColor: 'bg-rose-100 text-brand-700 border-rose-200',
+    cardGradient: 'from-rose-100/80 via-pink-50 to-white hover:border-rose-300 shadow-pink-soft',
+    decorEmoji: '💅',
   },
   {
     name: 'Щітки',
-    icon: '🪥',
+    icon: '🪥🦷',
+    mascot: '🦷⚡',
+    badge: '5460 щетинок!',
     count: 18,
-    desc: 'Мануальні щітки Curaprox та міжзубні йоржики TePe і Interprox',
+    desc: 'Ультрам’які мануальні щітки Curaprox та анатомічні міжзубні йоржики TePe',
     brands: ['Curaprox 5460', 'TePe Angle'],
     badgeColor: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    cardGradient: 'from-emerald-50/60 to-teal-50/30 hover:border-emerald-300',
+    cardGradient: 'from-emerald-100/80 via-teal-50 to-white hover:border-emerald-300 shadow-sm',
+    decorEmoji: '✨',
   },
   {
     name: 'Ополіскувачі',
-    icon: '💧',
+    icon: '💧🦷',
+    mascot: '🦷🫧',
+    badge: 'Свіжість 24/7',
     count: 8,
-    desc: 'Антибактеріальний захист та тривала свіжість ротової порожнини',
+    desc: 'Антибактеріальний захист, здоров’я ясен та тривалий рожевий фреш-подих',
     brands: ['BioRepair', 'Curasept'],
     badgeColor: 'bg-cyan-100 text-cyan-700 border-cyan-200',
-    cardGradient: 'from-cyan-50/60 to-sky-50/30 hover:border-cyan-300',
+    cardGradient: 'from-cyan-100/80 via-sky-50 to-white hover:border-cyan-300 shadow-sm',
+    decorEmoji: '🌊',
   },
   {
     name: 'Мінералізація',
-    icon: '💎',
+    icon: '💎🦷',
+    mascot: '🦷👑',
+    badge: 'Лікування емалі',
     count: 3,
-    desc: 'Ремінералізуючі гелі Tooth Mousse для лікування плям та зміцнення емалі',
+    desc: 'Ремінералізуючі гелі Tooth Mousse для зміцнення емалі та лікування білих плям',
     brands: ['Tooth Mousse', 'MI Paste'],
     badgeColor: 'bg-purple-100 text-purple-700 border-purple-200',
-    cardGradient: 'from-purple-50/60 to-fuchsia-50/30 hover:border-purple-300',
+    cardGradient: 'from-purple-100/80 via-fuchsia-50 to-white hover:border-purple-300 shadow-pink-soft',
+    decorEmoji: '👑',
   },
   {
     name: 'Додаткові засоби',
-    icon: '🧼',
+    icon: '🧼🦷',
+    mascot: '🦷🎀',
+    badge: 'Супер Догляд',
     count: 17,
-    desc: 'Супер флос нитки, дентальні серветки для малюків та ксилітолові гумки',
+    desc: 'Дентальні серветки для малюків, нитки Oral-B SuperFloss та ксилітолові гумки',
     brands: ['Oral-B SuperFloss', 'Miradent'],
     badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
-    cardGradient: 'from-amber-50/60 to-orange-50/30 hover:border-amber-300',
+    cardGradient: 'from-amber-100/80 via-orange-50 to-white hover:border-amber-300 shadow-sm',
+    decorEmoji: '🎀',
   },
 ];
 
@@ -120,79 +138,95 @@ export function CategoryPillsStrip({ selectedCategory, onSelectCategory }) {
  */
 export default function CategoryCatalog() {
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Clean Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
         <div>
-          <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900">
-            Каталог категорій
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-100 text-brand-700 text-xs font-bold rounded-full mb-2 border border-rose-200">
+            <span>✨ Обирай категорію догляду</span>
+          </div>
+          <h2 className="font-heading font-extrabold text-2xl sm:text-4xl text-slate-900">
+            Каталог товарів за категоріями 🦷💖
           </h2>
-          <p className="text-slate-500 text-xs sm:text-sm mt-1">
-            Обирайте необхідний напрямок догляду за ротовою порожниною
+          <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xl">
+            Натискайте на категорію, щоб обрати спеціалізовані засоби догляду від провідних світових брендів
           </p>
         </div>
 
         <Link
           href="/catalog"
-          className="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 group transition-colors"
+          className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-full text-xs font-bold transition-all shadow-pink-soft flex items-center gap-2"
         >
           <span>Весь каталог товарів</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
-      {/* Grid of Category Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid of Large Category Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {CATEGORIES_DATA.map((cat) => (
           <Link
             key={cat.name}
             href={`/catalog/${encodeURIComponent(cat.name)}`}
-            className={`group bg-gradient-to-br ${cat.cardGradient} bg-white rounded-3xl p-6 border border-rose-100/80 shadow-xs hover:shadow-xl hover-lift flex flex-col justify-between transition-all duration-300 relative overflow-hidden`}
+            className={`group bg-gradient-to-br ${cat.cardGradient} rounded-3xl p-7 border-2 border-rose-100/90 shadow-md hover:shadow-2xl hover-lift flex flex-col justify-between transition-all duration-300 relative overflow-hidden min-h-[260px]`}
           >
+            {/* Background Decorative Tooth Character */}
+            <div className="absolute -right-4 -bottom-4 text-7xl opacity-15 group-hover:opacity-30 group-hover:scale-125 transition-all duration-500 pointer-events-none select-none">
+              {cat.mascot}
+            </div>
+
             <div>
-              {/* Top row: Icon & Count Badge */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-white shadow-xs border border-slate-100 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-                  {cat.icon}
+              {/* Top row: Tooth Character & Count Badge */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="w-16 h-16 rounded-2xl bg-white shadow-md border border-rose-100 flex items-center justify-center text-3xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                  {cat.mascot}
                 </div>
-                <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full border ${cat.badgeColor}`}>
-                  {cat.count} найменувань
+                <span className={`text-xs font-extrabold px-3.5 py-1 rounded-full border shadow-2xs ${cat.badgeColor}`}>
+                  {cat.count} товарів
                 </span>
               </div>
 
-              {/* Title */}
-              <h3 className="font-heading font-extrabold text-lg text-slate-900 group-hover:text-brand-600 transition-colors mb-1.5">
-                {cat.name}
-              </h3>
+              {/* Title & Badge */}
+              <div className="space-y-1 mb-2">
+                <div className="text-[11px] font-extrabold text-brand-600 uppercase tracking-widest">
+                  {cat.badge} {cat.decorEmoji}
+                </div>
+                <h3 className="font-heading font-extrabold text-2xl text-slate-900 group-hover:text-brand-600 transition-colors">
+                  {cat.name}
+                </h3>
+              </div>
 
               {/* Description */}
-              <p className="text-xs text-slate-600 leading-relaxed mb-4">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-5 font-medium">
                 {cat.desc}
               </p>
+            </div>
 
-              {/* Popular Brand Pills */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
+            {/* Popular Brands & Action Bar */}
+            <div className="space-y-3 pt-4 border-t border-rose-200/50">
+              <div className="flex flex-wrap gap-1.5">
                 {cat.brands.map((b) => (
                   <span
                     key={b}
-                    className="text-[10px] font-semibold text-slate-500 bg-white/80 px-2 py-0.5 rounded-md border border-slate-100"
+                    className="text-[10px] font-bold text-slate-600 bg-white/90 px-2.5 py-1 rounded-lg border border-rose-100 shadow-2xs"
                   >
                     {b}
                   </span>
                 ))}
               </div>
-            </div>
 
-            {/* Bottom Link Bar */}
-            <div className="pt-3 border-t border-slate-200/50 flex items-center justify-between font-bold text-xs text-brand-600 group-hover:text-brand-700">
-              <span>Перейти в категорію</span>
-              <div className="w-7 h-7 rounded-full bg-white group-hover:bg-brand-600 group-hover:text-white flex items-center justify-center transition-all shadow-xs">
-                <ArrowRight className="w-3.5 h-3.5" />
+              <div className="flex items-center justify-between font-extrabold text-xs text-brand-600 group-hover:text-brand-700 pt-1">
+                <span>Відкрити категорію</span>
+                <div className="w-8 h-8 rounded-full bg-brand-600 text-white group-hover:bg-brand-700 flex items-center justify-center transition-transform group-hover:translate-x-1 shadow-pink-soft">
+                  <ArrowRight className="w-4 h-4" />
+                </div>
               </div>
             </div>
+
           </Link>
         ))}
       </div>
     </section>
   );
 }
+

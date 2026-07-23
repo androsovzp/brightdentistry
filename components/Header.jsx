@@ -2,13 +2,21 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { ShoppingBag, Search, Phone, Menu, X, ChevronRight } from 'lucide-react';
+import { ShoppingBag, Search, Phone, Menu, X, ChevronRight, Sparkles, Instagram, Clock, Wand2, HelpCircle } from 'lucide-react';
 import { useCart } from '@/lib/store';
 import { searchProducts } from '@/lib/data';
 
 export default function Header() {
   const router = RouterHook();
-  const { totalCount, setIsCartOpen, setActiveModalProduct } = useCart();
+  const {
+    totalCount,
+    setIsCartOpen,
+    setActiveModalProduct,
+    isSparkleMode,
+    toggleSparkleMode,
+    setIsQuizOpen,
+    setIsTimerOpen,
+  } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -52,15 +60,37 @@ export default function Header() {
     }
   };
 
+  const marqueeItems = [
+    '💖 BRIGHT DENTISTRY • Стоматологічний магазин у Вінниці',
+    '✨ Твоя усмішка заслуговує на яскравий рожевий догляд!',
+    '🚀 Безкоштовна доставка замовлень від 1500 грн по Україні',
+    '📸 Instagram: @bright_dentistry.ua',
+    '🪥 Оригінальні щітки Curaprox, пасти BioRepair та гелі Tooth Mousse',
+    '💅 100% Сертифікована продукція від офіційних дистриб’юторів',
+  ];
+
   return (
     <header className="sticky top-0 z-40 w-full shadow-sm bg-white/95 backdrop-blur-md border-b border-rose-100">
+      
+      {/* Top Neon-Pink Marquee Ticker */}
+      <div className="bg-gradient-to-r from-brand-600 via-rosebrand-500 to-pink-600 text-white text-[11px] font-semibold py-1.5 overflow-hidden shadow-inner flex items-center select-none">
+        <div className="animate-marquee flex items-center whitespace-nowrap gap-8">
+          {[...marqueeItems, ...marqueeItems].map((text, idx) => (
+            <span key={idx} className="flex items-center gap-2">
+              <span>{text}</span>
+              <span className="text-white/40">•</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* Main Header Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-4">
+        <div className="flex items-center justify-between h-20 gap-3 sm:gap-4">
           
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative w-40 h-12 transition-transform duration-300 group-hover:scale-105">
+            <div className="relative w-36 sm:w-44 h-12 transition-transform duration-300 group-hover:scale-105">
               <img
                 src="/images/logo.webp"
                 alt="Bright Dentistry Logo"
@@ -139,27 +169,45 @@ export default function Header() {
             )}
           </div>
 
-          {/* Contact Info & Actions */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Contact Info & Interactive Actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
             
-            {/* Phone button */}
-            <a
-              href="tel:+380732762627"
-              className="hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-full text-slate-700 hover:text-brand-600 hover:bg-rose-50 transition-all text-xs font-medium border border-rose-100"
+            {/* Pink Sparkle Mode Toggle */}
+            <button
+              onClick={toggleSparkleMode}
+              className={`p-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 border shadow-2xs ${
+                isSparkleMode
+                  ? 'bg-rose-100 text-brand-700 border-brand-300 hover:bg-rose-200'
+                  : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+              }`}
+              title="Перемикач Pink Sparkle Mode"
             >
-              <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center">
-                <Phone className="w-3.5 h-3.5" />
-              </div>
-              <div className="text-left">
-                <div className="text-[10px] text-slate-400 leading-none">Консультація (Вінниця)</div>
-                <div className="font-bold text-slate-800 text-xs mt-0.5">+380 (73) 276-26-27</div>
-              </div>
-            </a>
+              <Wand2 className={`w-4 h-4 ${isSparkleMode ? 'text-brand-600 animate-bounce' : 'text-slate-400'}`} />
+              <span className="hidden xl:inline-block">Sparkle Mode</span>
+            </button>
+
+            {/* Quick Quiz Trigger Button */}
+            <button
+              onClick={() => setIsQuizOpen(true)}
+              className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-xs border border-rose-200 transition-all hover:scale-105 active:scale-95"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-500" />
+              <span>Рожевий квіз</span>
+            </button>
+
+            {/* Tooth Timer Trigger Button */}
+            <button
+              onClick={() => setIsTimerOpen(true)}
+              className="hidden xl:flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-brand-700 font-bold text-xs border border-rose-200 transition-all hover:scale-105 active:scale-95"
+            >
+              <Clock className="w-3.5 h-3.5 text-brand-500" />
+              <span>2-хв таймер</span>
+            </button>
 
             {/* Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-full font-semibold text-xs flex items-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95"
+              className="relative p-2.5 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-full font-semibold text-xs flex items-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95 shrink-0"
             >
               <ShoppingBag className="w-4 h-4" />
               <span className="hidden sm:inline-block">Кошик</span>
@@ -181,7 +229,7 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center justify-center gap-1 border-t border-rose-100/60 py-2.5 text-xs font-semibold text-slate-600">
+        <nav className="hidden md:flex items-center justify-center gap-1.5 border-t border-rose-100/60 py-2 text-xs font-semibold text-slate-600">
           <Link
             href="/"
             className={`px-3 py-1.5 rounded-full transition-colors ${
@@ -226,12 +274,15 @@ export default function Header() {
           >
             💎 Мінералізація
           </Link>
-          <Link
-            href="/catalog/Додаткові%20засоби"
-            className="px-3 py-1.5 rounded-full hover:text-brand-600 hover:bg-rose-50 transition-colors"
+          <a
+            href="https://www.instagram.com/bright_dentistry.ua/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 rounded-full text-pink-600 hover:bg-pink-50 transition-colors flex items-center gap-1 font-bold"
           >
-            🧼 Додаткові засоби
-          </Link>
+            <Instagram className="w-3.5 h-3.5" />
+            <span>@bright_dentistry.ua</span>
+          </a>
         </nav>
       </div>
 
@@ -248,6 +299,30 @@ export default function Header() {
             />
             <Search className="w-4 h-4 text-brand-400 absolute left-3 top-2.5" />
           </form>
+
+          {/* Quick Mobile Interactive Buttons */}
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsQuizOpen(true);
+              }}
+              className="flex-1 p-2 bg-rose-100 text-brand-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+              <span>Рожевий квіз</span>
+            </button>
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsTimerOpen(true);
+              }}
+              className="flex-1 p-2 bg-rose-100 text-brand-800 font-bold rounded-xl text-xs flex items-center justify-center gap-1"
+            >
+              <Clock className="w-3.5 h-3.5 text-brand-600" />
+              <span>2-хв таймер</span>
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs font-semibold pt-2">
             <Link
@@ -298,3 +373,4 @@ export default function Header() {
     </header>
   );
 }
+

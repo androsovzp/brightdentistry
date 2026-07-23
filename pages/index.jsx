@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Hero from '@/components/Hero';
 import CategoryCatalog, { CategoryPillsStrip } from '@/components/CategoryCatalog';
 import ProductCard from '@/components/ProductCard';
+import InstagramSection from '@/components/InstagramSection';
 import { getProducts, getCategories } from '@/lib/data';
 import { ArrowRight, MapPin, Clock, Phone, Stethoscope } from 'lucide-react';
 
@@ -93,7 +94,10 @@ export default function Home({ products, categories }) {
         </div>
       </section>
 
-      {/* 5. Clinic Consultation & Location Banner */}
+      {/* 5. Instagram Aesthetic Section */}
+      <InstagramSection />
+
+      {/* 6. Clinic Consultation & Location Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-brand-950 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-xl">
           <div className="absolute right-0 top-0 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -145,3 +149,4 @@ export default function Home({ products, categories }) {
     </div>
   );
 }
+
