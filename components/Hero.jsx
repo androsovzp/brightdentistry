@@ -1,169 +1,105 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ShieldCheck, Heart, Wand2 } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, Heart, Wand2, Sparkle } from 'lucide-react';
 import { useCart } from '@/lib/store';
 
 export default function Hero() {
   const { setIsQuizOpen } = useCart();
-  const [activeMagicTab, setActiveMagicTab] = useState('shine');
-
-  const MAGIC_TABS = {
-    shine: {
-      title: '💅 Рожевий Сяючий Догляд',
-      desc: 'BioRepair & Curaprox для білосніжної усмішки',
-      price: 'від 180 грн',
-      badge: 'Відбілювання',
-    },
-    kids: {
-      title: '🍓 Ніжний Дитячий Догляд',
-      desc: 'Безпечні пасти без цукру від 0 років',
-      price: 'від 165 грн',
-      badge: 'Для малюків',
-    },
-    mineral: {
-      title: '💎 Ремінералізація Емалі',
-      desc: 'Гелі Tooth Mousse для зміцнення емалі',
-      price: 'від 650 грн',
-      badge: 'Відновлення',
-    },
-  };
-
-  const currentTab = MAGIC_TABS[activeMagicTab];
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-rose-50/70 via-white to-slate-50 pt-8 pb-12 lg:pt-14 lg:pb-16 border-b border-rose-100/60">
+    <section className="relative overflow-hidden bg-slate-900 text-white min-h-[460px] sm:min-h-[500px] flex items-center justify-center border-b border-rose-900/40 select-none">
       
-      {/* Soft Ambient Radial Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-200/20 rounded-full blur-3xl pointer-events-none" />
+      {/* Stage Background with Soft Pink Spotlights */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-900/60 via-slate-900 to-black pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-pink-500/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
-          {/* Left Column: Clean Minimalist Copy */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            
-            {/* Soft Clinic Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-rose-200 text-brand-700 text-xs font-bold shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
-              <span>Стоматологічна клініка Bright Dentistry (м. Вінниця)</span>
-            </div>
-
-            <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-[1.15] tracking-tight">
-              Сяй яскраво! <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-rosebrand-500 to-pink-500">
-                Твій ідеальний догляд
-              </span>
-            </h1>
-
-            <p className="text-slate-600 text-sm sm:text-base max-w-lg mx-auto lg:mx-0 leading-relaxed font-medium">
-              Професійні зубні пасти, м’які щітки та гелі ремінералізації. Підібрано із любов’ю та підтверджено стоматологами клініки.
-            </p>
-
-            {/* Clean Single Primary Action & Quiz Trigger */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <Link
-                href="/catalog"
-                className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-rosebrand-600 hover:from-brand-700 hover:to-rosebrand-700 text-white rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95"
-              >
-                <span>Перейти в каталог</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <button
-                onClick={() => setIsQuizOpen(true)}
-                className="inline-flex items-center gap-2 text-xs font-bold text-brand-700 hover:text-brand-800 transition-colors p-2"
-              >
-                <Sparkles className="w-4 h-4 text-brand-500" />
-                <span>Пройти рожевий квіз догляду ✨</span>
-              </button>
-            </div>
-
-            {/* Trust Pill */}
-            <div className="pt-4 flex items-center justify-center lg:justify-start gap-6 text-xs text-slate-500 font-semibold border-t border-rose-100">
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-brand-500" />
-                <span>100% Сертифіковано</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
-                <span>Вінниця • вул. Богуна, 2</span>
-              </div>
-            </div>
+      {/* Top Valance (Ламбрекен Штор) */}
+      <div className="absolute top-0 inset-x-0 z-30 flex justify-between pointer-events-none overflow-hidden h-14 sm:h-16">
+        <div className="w-full h-full bg-gradient-to-r from-brand-700 via-rosebrand-600 to-brand-700 border-b-2 border-yellow-300/80 shadow-2xl rounded-b-[40px] flex items-center justify-center px-4">
+          <div className="text-yellow-200 text-xs sm:text-sm font-extrabold tracking-widest uppercase flex items-center gap-2">
+            <span>✨ Bright Dentistry Theatre ✨</span>
           </div>
-
-          {/* Right Column: Interactive Pink Magic Card */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-sm lg:max-w-none bg-white p-6 rounded-3xl border border-rose-200 shadow-xl space-y-4">
-              
-              {/* Top Magic Bar */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-extrabold text-brand-700">
-                  <Wand2 className="w-4 h-4 text-brand-500 animate-bounce" />
-                  <span>Interactive Tooth Magic 💖</span>
-                </div>
-                <span className="text-[10px] font-bold bg-rose-100 text-brand-700 px-2.5 py-0.5 rounded-full">
-                  {currentTab.badge}
-                </span>
-              </div>
-
-              {/* Interactive Tooth Mascot */}
-              <div className="bg-gradient-to-b from-rose-50/80 to-white p-6 rounded-2xl border border-rose-100 text-center relative overflow-hidden group">
-                <div className="text-6xl mb-3 transform group-hover:scale-110 transition-transform duration-300 select-none">
-                  🦷✨
-                </div>
-
-                <h3 className="font-heading font-extrabold text-lg text-slate-900 mb-1">
-                  {currentTab.title}
-                </h3>
-                <p className="text-xs text-slate-500 mb-3 font-medium">
-                  {currentTab.desc}
-                </p>
-                <div className="font-extrabold text-brand-600 text-sm">
-                  {currentTab.price}
-                </div>
-              </div>
-
-              {/* Minimalist 3 Magic Pills Selector */}
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  onClick={() => setActiveMagicTab('shine')}
-                  className={`py-2 px-1 rounded-xl text-[11px] font-bold transition-all border ${
-                    activeMagicTab === 'shine'
-                      ? 'bg-brand-600 text-white border-brand-600 shadow-2xs'
-                      : 'bg-rose-50 text-slate-700 border-rose-100 hover:bg-rose-100'
-                  }`}
-                >
-                  💅 Сяйво
-                </button>
-                <button
-                  onClick={() => setActiveMagicTab('kids')}
-                  className={`py-2 px-1 rounded-xl text-[11px] font-bold transition-all border ${
-                    activeMagicTab === 'kids'
-                      ? 'bg-brand-600 text-white border-brand-600 shadow-2xs'
-                      : 'bg-rose-50 text-slate-700 border-rose-100 hover:bg-rose-100'
-                  }`}
-                >
-                  🍓 Малюкам
-                </button>
-                <button
-                  onClick={() => setActiveMagicTab('mineral')}
-                  className={`py-2 px-1 rounded-xl text-[11px] font-bold transition-all border ${
-                    activeMagicTab === 'mineral'
-                      ? 'bg-brand-600 text-white border-brand-600 shadow-2xs'
-                      : 'bg-rose-50 text-slate-700 border-rose-100 hover:bg-rose-100'
-                  }`}
-                >
-                  💎 Захист
-                </button>
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
+
+      {/* Left Curtain */}
+      <div
+        className={`absolute left-0 top-0 bottom-0 w-1/2 z-20 bg-gradient-to-r from-brand-800 via-brand-600 to-rosebrand-600 border-r-4 border-yellow-300/60 shadow-2xl transition-transform duration-1000 ease-in-out flex items-center justify-end pr-4 pointer-events-none ${
+          isOpen ? '-translate-x-[85%]' : 'translate-x-0'
+        }`}
+      >
+        {/* Vertical Curtain Folds texture */}
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(0,0,0,0.15)_20px,rgba(0,0,0,0.15)_40px)]" />
+        <div className="relative z-10 text-yellow-300 text-2xl animate-pulse pr-2">🎗️</div>
+      </div>
+
+      {/* Right Curtain */}
+      <div
+        className={`absolute right-0 top-0 bottom-0 w-1/2 z-20 bg-gradient-to-l from-brand-800 via-brand-600 to-rosebrand-600 border-l-4 border-yellow-300/60 shadow-2xl transition-transform duration-1000 ease-in-out flex items-center justify-start pl-4 pointer-events-none ${
+          isOpen ? 'translate-x-[85%]' : 'translate-x-0'
+        }`}
+      >
+        {/* Vertical Curtain Folds texture */}
+        <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(0,0,0,0.15)_20px,rgba(0,0,0,0.15)_40px)]" />
+        <div className="relative z-10 text-yellow-300 text-2xl animate-pulse pl-2">🎗️</div>
+      </div>
+
+      {/* Main Stage Content Revealed */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 py-16 sm:py-20 space-y-6">
+        
+        {/* Stage Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-brand-300 text-xs font-bold shadow-lg backdrop-blur-md">
+          <Sparkles className="w-4 h-4 text-yellow-300 animate-spin-slow" />
+          <span>Театр Сліпучої Усмішки • Вінниця</span>
+        </div>
+
+        {/* Grand Headline */}
+        <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-white leading-[1.15] tracking-tight">
+          Шоу твоєї усмішки <br />
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-300 via-rose-200 to-brand-300">
+            відкриває завісу 🎭✨
+          </span>
+        </h1>
+
+        <p className="text-slate-300 text-xs sm:text-base max-w-xl mx-auto leading-relaxed font-medium">
+          Оригінальні зубні пасти BioRepair, ультрам’які щітки Curaprox та гелі Tooth Mousse. Підібрано стоматологами Bright Dentistry!
+        </p>
+
+        {/* Stage Buttons */}
+        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/catalog"
+            className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-500 to-pink-500 hover:from-brand-600 hover:to-pink-600 text-white rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-pink-glow transition-all active:scale-95"
+          >
+            <span>Відкрити весь каталог</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full sm:w-auto px-6 py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 backdrop-blur-md transition-all active:scale-95"
+          >
+            <span>{isOpen ? '🎭 Закрити завісу' : '🎭 Відкрити завісу'}</span>
+          </button>
+        </div>
+
+        {/* Quick Quiz Link */}
+        <div className="pt-2">
+          <button
+            onClick={() => setIsQuizOpen(true)}
+            className="text-xs font-semibold text-brand-300 hover:text-white transition-colors inline-flex items-center gap-1.5"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+            <span>Пройти рожевий квіз підбору догляду</span>
+          </button>
+        </div>
+
+      </div>
+
     </section>
   );
 }
+
 
 
