@@ -240,47 +240,53 @@ export default function PinkQuizModal() {
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Рекомендовані товари для вас:
                 </div>
-                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                  {result.recommendedProducts.map((p) => (
-                    <div
-                      key={p.id}
-                      className="p-3 bg-rose-50/70 rounded-2xl border border-rose-100 flex items-center justify-between gap-3 hover:bg-rose-100/60 transition-colors"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <img
-                          src={p.image}
-                          alt={p.title}
-                          className="w-10 h-10 object-contain bg-white rounded-xl p-1 border border-rose-100"
-                        />
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-slate-800 truncate">
-                            {p.title}
-                          </div>
-                          <div className="text-[11px] font-bold text-brand-600">
-                            {p.priceFormatted}
+                <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+                  {result.recommendedProducts.map((p) => {
+                    // Clean redundant prefix for ultra-compact display
+                    const cleanTitle = p.title.replace(/^Зубна паста\s+/i, '');
+
+                    return (
+                      <div
+                        key={p.id}
+                        className="p-3 bg-rose-50/70 rounded-2xl border border-rose-100 flex items-center justify-between gap-2.5 hover:bg-rose-100/60 transition-colors"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                          <img
+                            src={p.image}
+                            alt={p.title}
+                            className="w-11 h-11 object-contain bg-white rounded-xl p-1 border border-rose-100 shrink-0"
+                          />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold text-slate-900 leading-tight line-clamp-2">
+                              {cleanTitle}
+                            </div>
+                            <div className="text-[11px] font-extrabold text-brand-600 mt-0.5">
+                              {p.priceFormatted}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <button
-                          onClick={() => {
-                            setIsQuizOpen(false);
-                            setActiveModalProduct(p);
-                          }}
-                          className="px-2.5 py-1.5 bg-white text-slate-700 hover:text-brand-600 border border-rose-200 rounded-xl text-[11px] font-semibold transition-colors"
-                        >
-                          Детальніше
-                        </button>
-                        <button
-                          onClick={() => addToCart(p, 1)}
-                          className="p-1.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition-colors shadow-2xs"
-                        >
-                          <ShoppingBag className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => {
+                              setIsQuizOpen(false);
+                              setActiveModalProduct(p);
+                            }}
+                            className="px-2.5 py-1.5 bg-white text-slate-700 hover:text-brand-600 border border-rose-200 rounded-xl text-[11px] font-bold transition-colors shadow-2xs"
+                          >
+                            Детальніше
+                          </button>
+                          <button
+                            onClick={() => addToCart(p, 1)}
+                            className="p-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition-colors shadow-2xs"
+                            title="Додати в кошик"
+                          >
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
