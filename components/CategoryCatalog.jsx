@@ -6,6 +6,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Дитячі пасти',
     icon: '👶',
+    image: '/images/categories/kids.webp',
     count: 16,
     desc: 'Ніжні та безпечні зубні пасти від 0 років зі смаками персика, полуниці та винограду',
     brands: ['BioRepair Kids', 'Curaprox Kids'],
@@ -15,6 +16,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Дорослі пасти',
     icon: '✨',
+    image: '/images/categories/adults.webp',
     count: 20,
     desc: 'Відновлення емалі, лікування чутливості та дбайливе відбілювання для ідеальної усмішки',
     brands: ['BioRepair', 'Curaprox'],
@@ -24,6 +26,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Щітки',
     icon: '🪥',
+    image: '/images/categories/brushes.webp',
     count: 18,
     desc: 'Ультрам’які мануальні щітки Curaprox та анатомічні міжзубні йоржики TePe',
     brands: ['Curaprox 5460', 'TePe Angle'],
@@ -33,6 +36,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Ополіскувачі',
     icon: '💧',
+    image: '/images/categories/mouthwash.webp',
     count: 8,
     desc: 'Антибактеріальний захист, здоров’я ясен та тривалий рожевий фреш-подих',
     brands: ['BioRepair', 'Curasept'],
@@ -42,6 +46,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Мінералізація',
     icon: '💎',
+    image: '/images/categories/mineralization.webp',
     count: 3,
     desc: 'Ремінералізуючі гелі Tooth Mousse для зміцнення емалі та лікування білих плям',
     brands: ['Tooth Mousse', 'MI Paste'],
@@ -51,6 +56,7 @@ export const CATEGORIES_DATA = [
   {
     name: 'Додаткові засоби',
     icon: '🧼',
+    image: '/images/categories/extra.webp',
     count: 17,
     desc: 'Дентальні серветки для малюків, нитки Oral-B SuperFloss та ксилітолові гумки',
     brands: ['Oral-B SuperFloss', 'Miradent'],
@@ -116,7 +122,7 @@ export function CategoryPillsStrip({ selectedCategory, onSelectCategory }) {
 
 /**
  * CategoryCatalog Component
- * Elegant Visual Category Grid Section
+ * Elegant Visual Category Grid Section with Custom WEBP Illustrations
  */
 export default function CategoryCatalog() {
   return (
@@ -150,10 +156,14 @@ export default function CategoryCatalog() {
             className="group bg-white rounded-3xl p-6 sm:p-7 border border-rose-200/90 shadow-2xs hover:shadow-xl hover-lift flex flex-col justify-between transition-all duration-300 relative overflow-hidden"
           >
             <div>
-              {/* Top row: Icon Box & Count Badge */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-rose-100 transition-all duration-300">
-                  {cat.icon}
+              {/* Top row: Illustration & Count Badge */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 relative flex items-center justify-center">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"
+                  />
                 </div>
                 <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 text-brand-700 border border-rose-200">
                   {cat.count} товарів
@@ -198,5 +208,6 @@ export default function CategoryCatalog() {
     </section>
   );
 }
+
 
 
