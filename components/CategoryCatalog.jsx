@@ -156,24 +156,17 @@ export default function CategoryCatalog() {
             className="group bg-white rounded-3xl p-6 sm:p-7 border border-rose-200/90 shadow-2xs hover:shadow-xl hover-lift flex flex-col justify-between transition-all duration-300 relative overflow-hidden"
           >
             <div>
-              {/* Top row: Illustration & Count Badge */}
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 relative flex items-center justify-center">
-                  <img
-                    src={cat.image}
-                    alt={cat.name}
-                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-sm"
-                  />
-                </div>
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 text-brand-700 border border-rose-200">
+              {/* Large Illustration Box & Count Badge */}
+              <div className="w-full h-44 sm:h-48 bg-gradient-to-b from-rose-50/60 to-white rounded-2xl border border-rose-100 p-4 relative flex items-center justify-center mb-5 overflow-hidden">
+                <span className="absolute top-3 right-3 z-10 text-xs font-bold px-3 py-1 rounded-full bg-white/90 text-brand-700 border border-rose-200 shadow-2xs">
                   {cat.count} товарів
                 </span>
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
+                />
               </div>
-
-              {/* Title */}
-              <h3 className="font-heading font-extrabold text-xl text-slate-900 group-hover:text-brand-600 transition-colors mb-2">
-                {cat.name}
-              </h3>
 
               {/* Description */}
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
@@ -208,6 +201,7 @@ export default function CategoryCatalog() {
     </section>
   );
 }
+
 
 
 
