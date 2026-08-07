@@ -25,7 +25,7 @@ export default function Hero() {
       {/* Left Light Soft Curtain */}
       <div
         className={`absolute left-0 top-0 bottom-0 w-1/2 z-30 bg-gradient-to-r from-rose-200 via-pink-200 to-rose-100 border-r-2 border-pink-300/50 shadow-xl transition-transform duration-[1200ms] ease-in-out pointer-events-none ${
-          isOpen ? '-translate-x-[94%]' : 'translate-x-0'
+          isOpen ? '-translate-x-[97%]' : 'translate-x-0'
         }`}
       >
         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(255,255,255,0.4)_20px,rgba(255,255,255,0.4)_40px)]" />
@@ -34,25 +34,25 @@ export default function Hero() {
       {/* Right Light Soft Curtain */}
       <div
         className={`absolute right-0 top-0 bottom-0 w-1/2 z-30 bg-gradient-to-l from-rose-200 via-pink-200 to-rose-100 border-l-2 border-pink-300/50 shadow-xl transition-transform duration-[1200ms] ease-in-out pointer-events-none ${
-          isOpen ? 'translate-x-[94%]' : 'translate-x-0'
+          isOpen ? 'translate-x-[97%]' : 'translate-x-0'
         }`}
       >
         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(255,255,255,0.4)_20px,rgba(255,255,255,0.4)_40px)]" />
       </div>
 
-      {/* Clean Light Stage Content - Responsive Alignment */}
-      <div className="max-w-7xl w-full mx-auto px-5 sm:px-6 lg:px-8 text-center sm:text-left relative z-10 py-10 sm:py-20 space-y-4 sm:space-y-5 animate-in fade-in duration-700">
+      {/* Clean Light Stage Content - Generous Left Indent & Padding */}
+      <div className="max-w-7xl w-full mx-auto px-7 sm:px-12 md:px-16 lg:px-24 text-left relative z-10 py-12 sm:py-20 space-y-4 sm:space-y-5 animate-in fade-in duration-700">
         
-        <h1 className="font-heading font-extrabold text-2xl sm:text-5xl lg:text-6xl text-slate-900 leading-snug sm:leading-tight tracking-tight max-w-2xl mx-auto sm:mx-0">
+        <h1 className="font-heading font-extrabold text-2xl sm:text-5xl lg:text-6xl text-slate-900 leading-snug sm:leading-tight tracking-tight max-w-2xl">
           Професійний догляд <br className="hidden sm:inline" />
           <span className="text-brand-600">для вашої усмішки</span>
         </h1>
 
-        <p className="text-slate-600 text-xs sm:text-base max-w-xl mx-auto sm:mx-0 leading-relaxed font-medium">
+        <p className="text-slate-600 text-xs sm:text-base max-w-xl leading-relaxed font-medium">
           Оригінальні зубні пасти BioRepair, ультрам’які щітки Curaprox та гелі ремінералізації Tooth Mousse з доставкою по Україні та консультацією стоматологів.
         </p>
 
-        <div className="pt-2 flex justify-center sm:justify-start">
+        <div className="pt-2 flex justify-start">
           <Link
             href="/catalog"
             className="px-7 py-3 sm:px-8 sm:py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-bold text-xs sm:text-base flex items-center justify-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95"
