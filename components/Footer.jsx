@@ -48,18 +48,12 @@ export default function Footer() {
           
           {/* Col 1: Brand Info */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center">
               <img
-                src="/images/logo.webp"
+                src="/images/logo.svg"
                 alt="BRIGHT dentistry"
-                className="h-10 w-auto"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
+                className="h-12 w-auto object-contain"
               />
-              <span className="font-heading font-extrabold text-xl text-brand-400">
-                BRIGHT <span className="text-white">dentistry</span>
-              </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Стоматологічна клініка та інтернет-магазин професійних засобів для догляду за ротовою порожниною. Ваша усмішка — наша головна турбота.

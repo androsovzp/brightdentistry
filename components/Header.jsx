@@ -92,18 +92,10 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="relative w-36 sm:w-44 h-12 transition-transform duration-300 group-hover:scale-105">
               <img
-                src="/images/logo.webp"
-                alt="Bright Dentistry Logo"
+                src="/images/logo.svg"
+                alt="BRIGHT dentistry Logo"
                 className="w-full h-full object-contain"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
               />
-              <div className="hidden items-center gap-2 font-bold text-xl text-brand-600">
-                <span className="bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center">B</span>
-                Bright Dentistry
-              </div>
             </div>
           </Link>
 

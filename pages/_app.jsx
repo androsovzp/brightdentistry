@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }) {
     '@context': 'https://schema.org',
     '@type': ['Dentist', 'OnlineStore'],
     'name': 'Bright Dentistry',
-    'image': 'https://brightdentistry.ua/images/logo.webp',
+    'image': 'https://brightdentistry.ua/images/logo.svg',
     'description': 'Офіційний онлайн-магазин та стоматологічна клініка Bright Dentistry у Вінниці. Оригінальні зубні пасти BioRepair, ультрам’які щітки Curaprox, гелі Tooth Mousse.',
     'address': {
       '@type': 'PostalAddress',
@@ -55,7 +55,7 @@ export default function App({ Component, pageProps }) {
         <meta name="twitter:title" content="Bright Dentistry — Професійні зубні пасти, щітки та гелі" />
         <meta name="twitter:description" content="Оригінальні доглядові засоби від стоматологів клініки Bright Dentistry у Вінниці." />
 
-        <link rel="icon" href="/images/logo.webp" />
+        <link rel="icon" href="/images/logo.svg" />
         
         {/* Schema.org Structured Data */}
         <script
