@@ -166,9 +166,15 @@ export default function Header() {
               </div>
             </a>
 
-
-
-            {/* Cart Button */}
+            {/* Tooth Brushing 2-Min Timer Button */}
+            <button
+              onClick={() => setIsTimerOpen(true)}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-full bg-rose-50 hover:bg-rose-100 text-brand-700 text-xs font-bold transition-all border border-rose-200"
+              title="2-хвилиниий таймер чищення зубів"
+            >
+              <Clock className="w-4 h-4 text-brand-600" />
+              <span className="hidden md:inline">2-хв таймер</span>
+            </button>
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative p-2.5 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-full font-semibold text-xs flex items-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95 shrink-0"
