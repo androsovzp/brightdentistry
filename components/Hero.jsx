@@ -14,7 +14,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-rose-50/80 via-white to-rose-50/40 text-slate-900 min-h-[45vh] sm:min-h-[55vh] lg:min-h-[60vh] flex items-center border-b border-rose-100 select-none">
+    <section className="relative overflow-hidden bg-gradient-to-b from-rose-50/80 via-white to-rose-50/40 text-slate-900 min-h-[40vh] sm:min-h-[50vh] lg:min-h-[55vh] flex items-center border-b border-rose-100 select-none">
       
       {/* Soft Light Ambient Glow */}
       <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-pink-200/40 rounded-full blur-3xl pointer-events-none" />
@@ -40,19 +40,14 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_20px,rgba(255,255,255,0.4)_20px,rgba(255,255,255,0.4)_40px)]" />
       </div>
 
-      {/* Clean Light Stage Content - Generous Left Indent & Padding */}
-      <div className="max-w-7xl w-full mx-auto px-7 sm:px-12 md:px-16 lg:px-24 text-left relative z-10 py-12 sm:py-20 space-y-4 sm:space-y-5 animate-in fade-in duration-700">
+      {/* Clean Light Stage Content - Generous Left Indent & Exact Client Formatting */}
+      <div className="max-w-7xl w-full mx-auto px-7 sm:px-12 md:px-16 lg:px-24 text-left relative z-10 py-10 sm:py-16 space-y-6 animate-in fade-in duration-700">
         
-        <h1 className="font-heading font-extrabold text-2xl sm:text-5xl lg:text-6xl text-slate-900 leading-snug sm:leading-tight tracking-tight max-w-2xl">
-          Професійний догляд <br className="hidden sm:inline" />
-          <span className="text-brand-600">для вашої усмішки</span>
+        <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 leading-tight sm:leading-tight tracking-tight max-w-2xl">
+          Професійний догляд <span className="text-brand-600">для вашої</span> усмішки
         </h1>
 
-        <p className="text-slate-600 text-xs sm:text-base max-w-xl leading-relaxed font-medium">
-          Оригінальні зубні пасти BioRepair, ультрам’які щітки Curaprox та гелі ремінералізації Tooth Mousse з доставкою по Україні та консультацією стоматологів.
-        </p>
-
-        <div className="pt-2 flex justify-start">
+        <div className="pt-1 flex justify-start">
           <Link
             href="/catalog"
             className="px-7 py-3 sm:px-8 sm:py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-bold text-xs sm:text-base flex items-center justify-center gap-2 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95"
