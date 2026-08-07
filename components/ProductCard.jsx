@@ -1,35 +1,19 @@
 import React from 'react';
-import { ShoppingBag, Eye, Sparkles } from 'lucide-react';
+import { ShoppingBag, Eye } from 'lucide-react';
 import { useCart } from '@/lib/store';
 
 export default function ProductCard({ product }) {
   const { addToCart, setActiveModalProduct } = useCart();
 
-  // Dynamic playful sticker badges
-  const getBadge = (category) => {
-    switch (category) {
-      case 'Дитячі пасти':
-        return { text: '👶 Смачно & Безпечно', bg: 'from-pink-400 to-rose-400' };
-      case 'Мінералізація':
-        return { text: '💎 Захист емалі', bg: 'from-fuchsia-500 to-brand-600' };
-      case 'Дорослі пасти':
-        return { text: '💅 Рожевий шик', bg: 'from-brand-500 to-rosebrand-500' };
-      case 'Щітки':
-        return { text: '✨ Сяй як діамант', bg: 'from-rose-500 to-pink-500' };
-      default:
-        return { text: '💖 Вибір стоматолога', bg: 'from-brand-600 to-pink-600' };
-    }
-  };
-
-  const badge = getBadge(product.category);
-
   return (
-    <div className="group bg-white rounded-3xl p-4 border border-rose-100/90 hover:border-brand-300 shadow-sm hover:shadow-pink-soft hover-lift flex flex-col justify-between relative transition-all duration-300">
+    <div className="group bg-white rounded-3xl p-4 border border-rose-100/90 hover:border-brand-300 shadow-xs hover:shadow-md hover-lift flex flex-col justify-between relative transition-all duration-300">
       
-      {/* Playful Pink Sticker Badge */}
-      <div className={`absolute -top-2 -right-2 bg-gradient-to-r ${badge.bg} text-white font-extrabold text-[9px] uppercase tracking-wide px-2.5 py-0.5 rounded-full shadow-md z-20 transform rotate-2 sticker-badge`}>
-        {badge.text}
-      </div>
+      {/* Optional meaningful badge only if explicitly set on a specific product */}
+      {product.badge && (
+        <div className="absolute -top-2 -right-2 bg-brand-600 text-white font-bold text-[10px] uppercase tracking-wide px-2.5 py-0.5 rounded-full shadow-sm z-20">
+          {product.badge}
+        </div>
+      )}
 
       {/* Category Badge & Code */}
       <div className="flex items-center justify-between gap-2 mb-3 z-10">
@@ -46,7 +30,7 @@ export default function ProductCard({ product }) {
         <img
           src={product.image || '/images/products/placeholder.webp'}
           alt={product.title}
-          className="max-h-full max-w-full object-contain group-hover:scale-108 transition-transform duration-300"
+          className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
             e.target.src = 'https://placehold.co/300x300/fce7f3/db2777?text=Bright+Dentistry';
           }}
@@ -55,9 +39,9 @@ export default function ProductCard({ product }) {
         {/* Quick View Eye Button */}
         <button
           onClick={() => setActiveModalProduct(product)}
-          className="absolute inset-0 bg-brand-900/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 text-white font-semibold text-xs"
+          className="absolute inset-0 bg-slate-900/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 text-white font-semibold text-xs"
         >
-          <span className="bg-white text-slate-800 hover:text-brand-600 px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5 transition-transform active:scale-95 font-bold">
+          <span className="bg-white text-slate-800 hover:text-brand-600 px-4 py-2 rounded-full shadow-md flex items-center gap-1.5 transition-transform active:scale-95 font-bold">
             <Eye className="w-4 h-4 text-brand-500" /> Швидкий перегляд
           </span>
         </button>
@@ -91,7 +75,7 @@ export default function ProductCard({ product }) {
 
           <button
             onClick={() => addToCart(product, 1)}
-            className="px-3.5 py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-2xl font-extrabold text-xs flex items-center gap-1.5 shadow-pink-soft hover:shadow-pink-glow transition-all active:scale-95 shrink-0"
+            className="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 shrink-0"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>В кошик</span>
@@ -101,4 +85,3 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
-
