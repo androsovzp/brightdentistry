@@ -71,18 +71,6 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full shadow-sm bg-white/95 backdrop-blur-md border-b border-rose-100">
-      
-      {/* Top Neon-Pink Marquee Ticker */}
-      <div className="bg-gradient-to-r from-brand-600 via-rosebrand-500 to-pink-600 text-white text-[11px] font-semibold py-1.5 overflow-hidden shadow-inner flex items-center select-none">
-        <div className="animate-marquee flex items-center whitespace-nowrap gap-8">
-          {[...marqueeItems, ...marqueeItems].map((text, idx) => (
-            <span key={idx} className="flex items-center gap-2">
-              <span>{text}</span>
-              <span className="text-white/40">•</span>
-            </span>
-          ))}
-        </div>
-      </div>
 
       {/* Main Header Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,18 +166,7 @@ export default function Header() {
               </div>
             </a>
 
-            {/* Sparkle Mode subtle icon toggle */}
-            <button
-              onClick={toggleSparkleMode}
-              className={`p-2.5 rounded-full text-xs font-bold transition-all border shadow-2xs ${
-                isSparkleMode
-                  ? 'bg-rose-100 text-brand-700 border-brand-300 hover:bg-rose-200'
-                  : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
-              }`}
-              title={isSparkleMode ? 'Вимкнути рожеві бліки' : 'Увімкнути Pink Sparkle Mode'}
-            >
-              <Wand2 className={`w-4 h-4 ${isSparkleMode ? 'text-brand-600' : 'text-slate-400'}`} />
-            </button>
+
 
             {/* Cart Button */}
             <button

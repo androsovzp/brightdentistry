@@ -131,7 +131,7 @@ export default function CategoryCatalog() {
       <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-6 gap-4">
         <div>
           <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900">
-            Категорії товарів 💖
+            Категорії товарів
           </h2>
           <p className="text-slate-500 text-xs sm:text-sm mt-1 max-w-xl">
             Обирайте необхідний напрямок професійного догляду за усмішкою
