@@ -56,7 +56,7 @@ export default function Home({ products }) {
               <div className="pt-2 flex flex-wrap gap-3 text-xs text-slate-300">
                 <div className="flex items-center gap-2 bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
                   <MapPin className="w-4 h-4 text-brand-400 shrink-0" />
-                  <span>м. Вінниця, вул. Івана Богуна, 2 (П'ятничани)</span>
+                  <span>м. Вінниця, вул. Івана Богуна, 2</span>
                 </div>
                 <div className="flex items-center gap-2 bg-white/10 px-3.5 py-2 rounded-xl border border-white/10">
                   <Clock className="w-4 h-4 text-brand-400 shrink-0" />
@@ -71,7 +71,7 @@ export default function Home({ products }) {
                 className="px-6 py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl font-extrabold text-xs text-center transition-all shadow-pink-glow flex items-center justify-center gap-2"
               >
                 <Phone className="w-4 h-4" />
-                <span>Зателефонувати: 073 276 2627</span>
+                <span>Зателефонувати: 073 27 626 27</span>
               </a>
               <Link
                 href="/catalog"

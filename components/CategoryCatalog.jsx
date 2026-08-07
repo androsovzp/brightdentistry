@@ -157,14 +157,14 @@ export default function CategoryCatalog() {
           >
             <div>
               {/* Large Illustration Box & Count Badge */}
-              <div className="w-full h-44 sm:h-48 bg-gradient-to-b from-rose-50/60 to-white rounded-2xl border border-rose-100 p-4 relative flex items-center justify-center mb-5 overflow-hidden">
+              <div className="w-full h-44 sm:h-48 bg-gradient-to-b from-rose-50/60 to-white rounded-2xl p-4 relative flex items-center justify-center mb-5 overflow-hidden">
                 <span className="absolute top-3 right-3 z-10 text-xs font-bold px-3 py-1 rounded-full bg-white/90 text-brand-700 border border-rose-200 shadow-2xs">
                   {cat.count} товарів
                 </span>
                 <img
                   src={cat.image}
                   alt={cat.name}
-                  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
+                  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
                 />
               </div>
 

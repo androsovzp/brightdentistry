@@ -51,14 +51,14 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <img
                 src="/images/logo.webp"
-                alt="Bright Dentistry"
-                className="h-10 w-auto bg-white p-1.5 rounded-lg"
+                alt="BRIGHT dentistry"
+                className="h-10 w-auto"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
               />
-              <span className="font-heading font-extrabold text-xl text-white">
-                Bright <span className="text-brand-400">Dentistry</span>
+              <span className="font-heading font-extrabold text-xl text-brand-400">
+                BRIGHT <span className="text-white">dentistry</span>
               </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
@@ -121,8 +121,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#about" className="hover:text-brand-400 transition-colors">
-                  Про клініку Bright Dentistry
+                <a
+                  href="https://bright-dentistry.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand-400 transition-colors"
+                >
+                  Про клініку BRIGHT dentistry
                 </a>
               </li>
               <li>
@@ -146,12 +151,12 @@ export default function Footer() {
             <ul className="space-y-3 text-xs text-slate-400">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                <span>м. Вінниця, вул. Івана Богуна, 2 (П'ятничани)</span>
+                <span>м. Вінниця, вул. Івана Богуна, 2</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-brand-400 shrink-0" />
                 <a href="tel:+380732762627" className="hover:text-white font-semibold">
-                  +380 (73) 276-26-27
+                  073 27 626 27
                 </a>
               </li>
               <li className="flex items-start gap-3">

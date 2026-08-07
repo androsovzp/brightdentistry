@@ -182,7 +182,7 @@ export default function Header() {
               </div>
               <div className="text-left">
                 <div className="text-[10px] text-slate-400 leading-none">Вінниця</div>
-                <div className="font-bold text-slate-800 text-xs mt-0.5">073 276 2627</div>
+                <div className="font-bold text-slate-800 text-xs mt-0.5">073 27 626 27</div>
               </div>
             </a>
 
