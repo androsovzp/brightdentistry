@@ -118,25 +118,6 @@ export default function CartDrawer() {
           {cart.length > 0 && (
             <div className="p-5 bg-slate-50 border-t border-rose-100 space-y-4">
               
-              {/* Pink Gift Wrapping Option */}
-              <label className="flex items-center gap-3 p-3 bg-rose-100/70 hover:bg-rose-100 rounded-2xl border border-rose-200 cursor-pointer transition-colors select-none">
-                <input
-                  type="checkbox"
-                  checked={isGiftWrapped}
-                  onChange={(e) => setIsGiftWrapped(e.target.checked)}
-                  className="w-4 h-4 text-brand-600 rounded focus:ring-brand-500 border-rose-300"
-                />
-                <div className="text-xs">
-                  <div className="font-extrabold text-slate-800 flex items-center gap-1">
-                    <span>🎀 Подарункова упаковка</span>
-                    <span className="bg-brand-500 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full">БЕЗКОШТОВНО</span>
-                  </div>
-                  <div className="text-slate-500 text-[11px]">
-                    Загорнемо посилочку в тотально-рожевий папір зі стікерами
-                  </div>
-                </div>
-              </label>
-
               <div className="space-y-1.5 text-xs text-slate-600">
                 <div className="flex justify-between">
                   <span>Всього товарів:</span>

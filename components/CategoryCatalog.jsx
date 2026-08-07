@@ -168,6 +168,11 @@ export default function CategoryCatalog() {
                 />
               </div>
 
+              {/* Category Title (Uppercase) */}
+              <h3 className="font-heading font-extrabold text-base sm:text-lg text-slate-900 uppercase tracking-wide group-hover:text-brand-600 transition-colors mb-2">
+                {cat.name}
+              </h3>
+
               {/* Description */}
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
                 {cat.desc}
