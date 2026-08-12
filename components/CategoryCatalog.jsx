@@ -173,10 +173,7 @@ export default function CategoryCatalog() {
                 {cat.name}
               </h3>
 
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-medium">
-                {cat.desc}
-              </p>
+
             </div>
 
             {/* Popular Brands & Action Bar */}
