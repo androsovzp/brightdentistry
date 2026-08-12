@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ProductCard from '@/components/ProductCard';
-import { getProducts, getCategories } from '@/lib/data';
+import { getProducts, getCategories, searchProducts } from '@/lib/data';
 import { Search, Filter, ArrowUpDown, Sparkles, X } from 'lucide-react';
 
 export async function getStaticProps() {
@@ -23,32 +23,31 @@ export default function CatalogPage({ products, categories }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
 
-  // Sync search query from router
+  // Sync search query from router and reset category to 'Всі' for global searches
   useEffect(() => {
     if (router.query.search) {
       setSearchQuery(router.query.search);
+      setSelectedCategory('Всі');
     }
   }, [router.query.search]);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Category filter
-    if (selectedCategory !== 'Всі') {
+    if (searchQuery.trim()) {
+      const searched = searchProducts(searchQuery);
+      if (selectedCategory !== 'Всі') {
+        const catMatches = searched.filter(
+          (p) => p.category.toLowerCase() === selectedCategory.toLowerCase()
+        );
+        // If results match in selected category, show them; otherwise search across all categories
+        result = catMatches.length > 0 ? catMatches : searched;
+      } else {
+        result = searched;
+      }
+    } else if (selectedCategory !== 'Всі') {
       result = result.filter(
         (p) => p.category.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-
-    // Search filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.code.includes(q) ||
-          p.category.toLowerCase().includes(q) ||
-          (p.description && p.description.toLowerCase().includes(q))
       );
     }
 

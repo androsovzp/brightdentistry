@@ -32,7 +32,7 @@ export default function Header() {
   }
 
   useEffect(() => {
-    if (searchQuery.trim().length >= 2) {
+    if (searchQuery.trim().length >= 1) {
       const results = searchProducts(searchQuery).slice(0, 6);
       setSearchResults(results);
       setIsSearchOpen(true);
@@ -95,7 +95,7 @@ export default function Header() {
                 placeholder="Пошук зубної пасти, щітки чи коду товару (напр. 0010)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchQuery.length >= 2 && setIsSearchOpen(true)}
+                onFocus={() => searchQuery.length >= 1 && setIsSearchOpen(true)}
                 className="w-full pl-10 pr-4 py-2.5 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-full text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:border-transparent transition-all"
               />
               <Search className="w-4 h-4 text-brand-400 absolute left-3.5 top-3" />
