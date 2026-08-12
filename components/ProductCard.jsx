@@ -57,7 +57,11 @@ export default function ProductCard({ product }) {
             {product.title}
           </h3>
 
-
+          {product.description && (
+            <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+              {product.description}
+            </p>
+          )}
         </div>
 
         {/* Price & Action Button */}
