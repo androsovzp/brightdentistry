@@ -168,35 +168,11 @@ export default function CategoryCatalog() {
                 />
               </div>
 
-              {/* Category Title (Uppercase) */}
-              <h3 className="font-heading font-extrabold text-base sm:text-lg text-slate-900 uppercase tracking-wide group-hover:text-brand-600 transition-colors mb-2">
+              {/* Category Title (Uppercase & Centered) */}
+              <h3 className="font-heading font-extrabold text-base sm:text-lg text-slate-900 uppercase tracking-wide group-hover:text-brand-600 transition-colors text-center">
                 {cat.name}
               </h3>
-
-
             </div>
-
-            {/* Popular Brands & Action Bar */}
-            <div className="space-y-3 pt-4 border-t border-rose-100">
-              <div className="flex flex-wrap gap-1.5">
-                {cat.brands.map((b) => (
-                  <span
-                    key={b}
-                    className="text-[11px] font-semibold text-slate-500 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100"
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between font-bold text-xs text-brand-600 group-hover:text-brand-700 pt-1">
-                <span>Переглянути товари</span>
-                <div className="w-8 h-8 rounded-full bg-rose-50 group-hover:bg-brand-600 text-brand-600 group-hover:text-white flex items-center justify-center transition-colors shadow-2xs">
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </div>
-
           </Link>
         ))}
       </div>
