@@ -72,6 +72,44 @@ export default function ProductEditorPage() {
     }
   }, [id]);
 
+  const compressImageFile = (file, maxDimension = 1200, quality = 0.85) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxDimension || height > maxDimension) {
+            if (width > height) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            } else {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to webp or jpeg
+          const mimeType = file.type === 'image/png' ? 'image/png' : 'image/webp';
+          const dataUrl = canvas.toDataURL(mimeType, quality);
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+        img.src = event.target.result;
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleImageFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -79,36 +117,34 @@ export default function ProductEditorPage() {
     setUploadingImage(true);
     setMessage({ type: '', text: '' });
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64 = reader.result;
+    try {
+      // Compress image client-side to fit within body limits
+      const base64 = await compressImageFile(file, 1200, 0.85);
 
-      try {
-        const res = await fetch('/api/admin/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            code: formData.code || Date.now().toString(),
-            fileBase64: base64,
-            filename: file.name,
-          }),
-        });
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: formData.code || Date.now().toString(),
+          fileBase64: base64,
+          filename: file.name,
+        }),
+      });
 
-        const data = await res.json();
-        if (res.ok && data.url) {
-          setFormData((prev) => ({ ...prev, image: data.url }));
-          setPreviewImage(data.url);
-          setMessage({ type: 'success', text: 'Зображення завантажено успішно!' });
-        } else {
-          setMessage({ type: 'error', text: data.message || 'Помилка завантаження' });
-        }
-      } catch (err) {
-        setMessage({ type: 'error', text: 'Помилка з’єднання з сервером завантаження' });
-      } finally {
-        setUploadingImage(false);
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setFormData((prev) => ({ ...prev, image: data.url }));
+        setPreviewImage(data.url);
+        setMessage({ type: 'success', text: 'Зображення завантажено успішно!' });
+      } else {
+        setMessage({ type: 'error', text: data.message || `Помилка завантаження (код ${res.status})` });
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      console.error('Upload error:', err);
+      setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSubmit = async (e) => {
