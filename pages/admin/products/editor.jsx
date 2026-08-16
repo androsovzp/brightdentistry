@@ -10,6 +10,7 @@ import {
   Check,
   AlertCircle,
   Package,
+  Trash2,
 } from 'lucide-react';
 
 export default function ProductEditorPage() {
@@ -121,6 +122,9 @@ export default function ProductEditorPage() {
       // Compress image client-side to fit within body limits
       const base64 = await compressImageFile(file, 1200, 0.85);
 
+      // Instant preview for immediate visual confirmation
+      setPreviewImage(base64);
+
       const res = await fetch('/api/admin/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -144,6 +148,9 @@ export default function ProductEditorPage() {
       setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
     } finally {
       setUploadingImage(false);
+      if (e.target) {
+        e.target.value = '';
+      }
     }
   };
 
@@ -318,13 +325,29 @@ export default function ProductEditorPage() {
 
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   {/* Image Preview Box */}
-                  <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/50 flex items-center justify-center p-2 shrink-0">
+                  <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/50 flex items-center justify-center p-2 shrink-0 relative group">
                     {previewImage ? (
-                      <img
-                        src={previewImage}
-                        alt="Preview"
-                        className="w-full h-full object-contain rounded-xl"
-                      />
+                      <>
+                        <img
+                          src={previewImage}
+                          alt="Preview"
+                          className="w-full h-full object-contain rounded-xl"
+                          onError={(e) => {
+                            e.target.src = '/images/products/placeholder.webp';
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData((prev) => ({ ...prev, image: '' }));
+                            setPreviewImage('');
+                          }}
+                          className="absolute -top-2 -right-2 bg-rose-500 hover:bg-rose-600 text-white p-1 rounded-full shadow-sm transition-colors"
+                          title="Видалити зображення"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
                     ) : (
                       <div className="text-center text-slate-400 space-y-1">
                         <ImageIcon className="w-8 h-8 mx-auto" />
@@ -347,7 +370,7 @@ export default function ProductEditorPage() {
                       />
                     </label>
                     <p className="text-[11px] text-slate-400">
-                      Автоматично збереже у `/images/products/prod_{formData.code || 'X'}.webp`
+                      Автоматично оптимізує та оновить фото у каталозі без проблем із кешуванням
                     </p>
 
                     {/* Manual Image Path Input */}
