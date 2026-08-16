@@ -28,16 +28,30 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
+      console.log('🔄 [Products List] Fetching products and categories...');
       const [resP, resC] = await Promise.all([
         fetch('/api/admin/products'),
         fetch('/api/admin/categories'),
       ]);
       const pData = await resP.json();
       const cData = await resC.json();
+
+      console.group('🛍️ [Products List] Data Loaded');
+      console.log('Total Products Count:', Array.isArray(pData) ? pData.length : 0);
+      if (Array.isArray(pData) && pData.length > 0) {
+        console.log('Sample Products:', pData.slice(0, 5).map((p) => ({
+          id: p.id,
+          code: p.code,
+          title: p.title,
+          image: p.image,
+        })));
+      }
+      console.groupEnd();
+
       setProducts(Array.isArray(pData) ? pData : []);
       setCategories(Array.isArray(cData) ? cData : []);
     } catch (err) {
-      console.error('Error loading products:', err);
+      console.error('❌ [Products List] Error loading products:', err);
     } finally {
       setLoading(false);
     }

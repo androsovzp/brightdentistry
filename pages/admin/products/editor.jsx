@@ -49,12 +49,20 @@ export default function ProductEditorPage() {
 
   useEffect(() => {
     if (id) {
+      console.log(`🔍 [Product Editor] Fetching product data for ID/code: "${id}"...`);
       fetch('/api/admin/products')
         .then((res) => res.json())
         .then((products) => {
           if (Array.isArray(products)) {
             const found = products.find((p) => p.id === id || p.code === String(id));
             if (found) {
+              console.group('🛍️ [Product Editor] Product Loaded Successfully');
+              console.log('ID:', found.id);
+              console.log('Code:', found.code);
+              console.log('Title:', found.title);
+              console.log('Stored Image URL:', found.image);
+              console.groupEnd();
+
               setFormData({
                 id: found.id,
                 code: found.code,
@@ -67,10 +75,12 @@ export default function ProductEditorPage() {
               });
               // Set preview to the stored path so existing image is visible
               setPreviewImage(found.image || '');
+            } else {
+              console.warn(`⚠️ [Product Editor] Product with ID/code "${id}" not found in catalog.`);
             }
           }
         })
-        .catch((e) => console.error(e));
+        .catch((e) => console.error('❌ [Product Editor] Error fetching product:', e));
     }
   }, [id]);
 
@@ -115,6 +125,12 @@ export default function ProductEditorPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    console.group('📁 [Image Upload Step 1] File Selected');
+    console.log('File Name:', file.name);
+    console.log('Original File Size:', `${(file.size / 1024).toFixed(1)} KB`);
+    console.log('MIME Type:', file.type);
+    console.groupEnd();
+
     setUploadingImage(true);
     setMessage({ type: '', text: '' });
 
@@ -122,8 +138,19 @@ export default function ProductEditorPage() {
       // Compress image client-side to compact WebP
       const base64 = await compressImageFile(file, 800, 0.8);
 
+      console.group('🗜️ [Image Upload Step 2] Client Compression Completed');
+      console.log('Output Format: WebP');
+      console.log('Compressed Base64 Length:', `${base64.length} characters`);
+      console.log('Estimated Base64 Payload Size:', `${(base64.length / 1024).toFixed(1)} KB`);
+      console.groupEnd();
+
       // Show instant local preview (base64 stays in browser only — NOT saved to DB)
       setPreviewImage(base64);
+
+      console.group('🌐 [Image Upload Step 3] Sending POST to /api/admin/upload...');
+      console.log('Target Product Code:', formData.code || '(empty, will use timestamp)');
+      console.log('File Name:', file.name);
+      console.groupEnd();
 
       // Upload to server: commits image file to GitHub, returns the path URL
       const res = await fetch('/api/admin/upload', {
@@ -137,15 +164,30 @@ export default function ProductEditorPage() {
       });
 
       const data = await res.json();
+
+      console.group('📥 [Image Upload Step 4] Server Response Received');
+      console.log('HTTP Status:', res.status, res.statusText);
+      console.log('Response JSON:', data);
+      if (data.debug) {
+        console.log('Server Debug Info:', data.debug);
+        console.log('Environment:', data.debug.environment);
+        console.log('GitHub Token Available:', data.debug.hasGithubToken);
+        console.log('GitHub Commit Status:', data.debug.github);
+        console.log('Local Write Status:', data.debug.localWrite);
+      }
+      console.groupEnd();
+
       if (res.ok && data.url) {
         // Store only the short path URL in the product record (not the heavy base64)
         setFormData((prev) => ({ ...prev, image: data.url }));
-        setMessage({ type: 'success', text: 'Зображення успішно завантажено та збережено!' });
+        console.log(`✅ [Image Upload] formData.image updated to: "${data.url}"`);
+        setMessage({ type: 'success', text: 'Зображення успішно завантажено! Натисніть "Зберегти товар".' });
       } else {
+        console.error('❌ [Image Upload] Upload failed on server:', data);
         setMessage({ type: 'error', text: data.message || `Помилка завантаження (код ${res.status})` });
       }
     } catch (err) {
-      console.error('Upload error:', err);
+      console.error('❌ [Image Upload] Fatal upload exception:', err);
       setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
     } finally {
       setUploadingImage(false);
@@ -165,8 +207,14 @@ export default function ProductEditorPage() {
     setSaving(true);
     setMessage({ type: '', text: '' });
 
+    const method = isEditing ? 'PUT' : 'POST';
+
+    console.group(`💾 [Product Save Step 1] Submitting ${method} /api/admin/products`);
+    console.log('Form Data Payload:', formData);
+    console.log('Image in payload:', formData.image);
+    console.groupEnd();
+
     try {
-      const method = isEditing ? 'PUT' : 'POST';
       const res = await fetch('/api/admin/products', {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -174,15 +222,28 @@ export default function ProductEditorPage() {
       });
 
       const data = await res.json();
+
+      console.group('📥 [Product Save Step 2] Server Response Received');
+      console.log('HTTP Status:', res.status, res.statusText);
+      console.log('Response JSON:', data);
+      if (data.debug) {
+        console.log('GitHub Token Available:', data.debug.hasGithubToken);
+        console.log('GitHub Commit Status:', data.debug.github);
+      }
+      console.groupEnd();
+
       if (res.ok && data.success) {
+        console.log('🎉 [Product Save] Product saved successfully!');
         setMessage({ type: 'success', text: 'Товар успішно збережено!' });
         setTimeout(() => {
           router.push('/admin/products');
         }, 1200);
       } else {
+        console.error('❌ [Product Save] Save failed:', data);
         setMessage({ type: 'error', text: data.message || 'Помилка збереження товару' });
       }
     } catch (err) {
+      console.error('❌ [Product Save] Network/Fetch exception:', err);
       setMessage({ type: 'error', text: 'Помилка зв’язку з сервером' });
     } finally {
       setSaving(false);

@@ -40,7 +40,10 @@ function writeProducts(products) {
 async function commitToGitHub(products) {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPOSITORY || 'androsovzp/brightdentistry';
-  if (!token || !repo) return;
+  if (!token) {
+    console.warn('⚠️ [Products API] GITHUB_TOKEN is not configured. Products.json cannot be pushed to GitHub.');
+    return { success: false, reason: 'GITHUB_TOKEN not configured' };
+  }
 
   try {
     const content = Buffer.from(JSON.stringify(products, null, 2)).toString('base64');
@@ -54,7 +57,7 @@ async function commitToGitHub(products) {
     const sha = fileData.sha;
 
     // 2. Put updated file
-    await fetch(url, {
+    const putRes = await fetch(url, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,8 +70,12 @@ async function commitToGitHub(products) {
         sha,
       }),
     });
+    const putData = await putRes.json();
+    console.log(`✅ [Products API] GitHub catalog commit status: ${putRes.status}`);
+    return { success: putRes.ok, status: putRes.status, data: putData };
   } catch (err) {
-    console.error('GitHub commit error:', err);
+    console.error('❌ [Products API] GitHub commit error:', err);
+    return { success: false, error: err.message };
   }
 }
 
@@ -119,9 +126,16 @@ export default async function handler(req, res) {
     }
 
     writeProducts(products);
-    await commitToGitHub(products);
+    const githubResult = await commitToGitHub(products);
 
-    return res.status(200).json({ success: true, product: newProduct });
+    return res.status(200).json({
+      success: true,
+      product: newProduct,
+      debug: {
+        github: githubResult,
+        hasGithubToken: Boolean(process.env.GITHUB_TOKEN),
+      },
+    });
   }
 
   if (req.method === 'PUT') {
@@ -152,9 +166,16 @@ export default async function handler(req, res) {
 
     products[index] = updatedProduct;
     writeProducts(products);
-    await commitToGitHub(products);
+    const githubResult = await commitToGitHub(products);
 
-    return res.status(200).json({ success: true, product: updatedProduct });
+    return res.status(200).json({
+      success: true,
+      product: updatedProduct,
+      debug: {
+        github: githubResult,
+        hasGithubToken: Boolean(process.env.GITHUB_TOKEN),
+      },
+    });
   }
 
   if (req.method === 'DELETE') {
