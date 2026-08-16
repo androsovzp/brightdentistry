@@ -73,7 +73,7 @@ export default function ProductEditorPage() {
     }
   }, [id]);
 
-  const compressImageFile = (file, maxDimension = 1200, quality = 0.85) => {
+  const compressImageFile = (file, maxDimension = 800, quality = 0.8) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -98,9 +98,8 @@ export default function ProductEditorPage() {
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Convert to webp or jpeg
-          const mimeType = file.type === 'image/png' ? 'image/png' : 'image/webp';
-          const dataUrl = canvas.toDataURL(mimeType, quality);
+          // Convert to webp
+          const dataUrl = canvas.toDataURL('image/webp', quality);
           resolve(dataUrl);
         };
         img.onerror = (err) => reject(err);
@@ -119,30 +118,29 @@ export default function ProductEditorPage() {
     setMessage({ type: '', text: '' });
 
     try {
-      // Compress image client-side to fit within body limits
-      const base64 = await compressImageFile(file, 1200, 0.85);
+      // Compress image client-side to compact WebP format
+      const base64 = await compressImageFile(file, 800, 0.8);
 
-      // Instant preview for immediate visual confirmation
+      // Instant preview and direct data URI assignment to prevent any 404s on serverless
       setPreviewImage(base64);
+      setFormData((prev) => ({ ...prev, image: base64 }));
 
-      const res = await fetch('/api/admin/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code: formData.code || Date.now().toString(),
-          fileBase64: base64,
-          filename: file.name,
-        }),
-      });
-
-      const data = await res.json();
-      if (res.ok && data.url) {
-        setFormData((prev) => ({ ...prev, image: data.url }));
-        setPreviewImage(data.url);
-        setMessage({ type: 'success', text: 'Зображення завантажено успішно!' });
-      } else {
-        setMessage({ type: 'error', text: data.message || `Помилка завантаження (код ${res.status})` });
+      // Optional upload call for server/GitHub sync
+      try {
+        await fetch('/api/admin/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code: formData.code || Date.now().toString(),
+            fileBase64: base64,
+            filename: file.name,
+          }),
+        });
+      } catch (uploadErr) {
+        console.warn('Background upload sync error:', uploadErr);
       }
+
+      setMessage({ type: 'success', text: 'Фото успішно підготовлено! Натисніть "Зберегти товар" нижче.' });
     } catch (err) {
       console.error('Upload error:', err);
       setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
@@ -376,8 +374,12 @@ export default function ProductEditorPage() {
                     {/* Manual Image Path Input */}
                     <input
                       type="text"
-                      placeholder="/images/products/prod_51.webp"
-                      value={formData.image}
+                      placeholder="/images/products/prod_51.webp або https://..."
+                      value={
+                        formData.image?.startsWith('data:')
+                          ? '✅ Завантажено оптимізоване WebP фото'
+                          : formData.image || ''
+                      }
                       onChange={(e) => {
                         setFormData({ ...formData, image: e.target.value });
                         setPreviewImage(e.target.value);

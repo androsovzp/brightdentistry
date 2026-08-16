@@ -2,6 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { verifyAdminAuth } from '@/lib/adminAuth';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '15mb',
+    },
+  },
+};
+
 const PRODUCTS_FILE_ROOT = path.join(process.cwd(), 'products.json');
 const PRODUCTS_FILE_PUBLIC = path.join(process.cwd(), 'public', 'data', 'products.json');
 
