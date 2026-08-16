@@ -76,28 +76,25 @@ export default async function handler(req, res) {
     const base64Data = fileBase64.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
 
-    const targetDir = path.join(process.cwd(), 'public', 'images', 'products');
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true });
-    }
-
     const prodFileName = `prod_${cleanCode}.webp`;
-    const prodFilePath = path.join(targetDir, prodFileName);
+    const targetDir = path.join(process.cwd(), 'public', 'images', 'products');
 
+    // Try to write locally (works in dev mode, silently fails on Vercel read-only FS)
     try {
       if (!fs.existsSync(targetDir)) {
         fs.mkdirSync(targetDir, { recursive: true });
       }
-      fs.writeFileSync(prodFilePath, buffer);
+      fs.writeFileSync(path.join(targetDir, prodFileName), buffer);
     } catch (fsErr) {
-      // Local FS write error (read-only filesystem on Vercel)
+      // Silently ignore — expected on Vercel serverless (read-only filesystem)
     }
 
-    // Commit to GitHub repository if credentials are configured
+    // Commit the image file to GitHub so Vercel can serve it after next redeploy
     await commitImageToGitHub(prodFileName, base64Data);
 
-    // Return the base64 data URI so it works reliably in serverless environments
-    return res.status(200).json({ success: true, url: fileBase64 });
+    // Return the relative path URL (NOT base64) — keeps products.json small
+    const relativeUrl = `/images/products/${prodFileName}`;
+    return res.status(200).json({ success: true, url: relativeUrl });
   } catch (err) {
     console.error('Upload API error:', err);
     return res.status(500).json({ message: 'Помилка завантаження зображення' });

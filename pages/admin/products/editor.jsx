@@ -65,7 +65,8 @@ export default function ProductEditorPage() {
                 image: found.image || '',
                 inStock: found.inStock !== undefined ? found.inStock : true,
               });
-              setPreviewImage(found.image);
+              // Set preview to the stored path so existing image is visible
+              setPreviewImage(found.image || '');
             }
           }
         })
@@ -118,29 +119,31 @@ export default function ProductEditorPage() {
     setMessage({ type: '', text: '' });
 
     try {
-      // Compress image client-side to compact WebP format
+      // Compress image client-side to compact WebP
       const base64 = await compressImageFile(file, 800, 0.8);
 
-      // Instant preview and direct data URI assignment to prevent any 404s on serverless
+      // Show instant local preview (base64 stays in browser only — NOT saved to DB)
       setPreviewImage(base64);
-      setFormData((prev) => ({ ...prev, image: base64 }));
 
-      // Optional upload call for server/GitHub sync
-      try {
-        await fetch('/api/admin/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            code: formData.code || Date.now().toString(),
-            fileBase64: base64,
-            filename: file.name,
-          }),
-        });
-      } catch (uploadErr) {
-        console.warn('Background upload sync error:', uploadErr);
+      // Upload to server: commits image file to GitHub, returns the path URL
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: formData.code || Date.now().toString(),
+          fileBase64: base64,
+          filename: file.name,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.url) {
+        // Store only the short path URL in the product record (not the heavy base64)
+        setFormData((prev) => ({ ...prev, image: data.url }));
+        setMessage({ type: 'success', text: 'Зображення успішно завантажено та збережено!' });
+      } else {
+        setMessage({ type: 'error', text: data.message || `Помилка завантаження (код ${res.status})` });
       }
-
-      setMessage({ type: 'success', text: 'Фото успішно підготовлено! Натисніть "Зберегти товар" нижче.' });
     } catch (err) {
       console.error('Upload error:', err);
       setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
@@ -374,12 +377,8 @@ export default function ProductEditorPage() {
                     {/* Manual Image Path Input */}
                     <input
                       type="text"
-                      placeholder="/images/products/prod_51.webp або https://..."
-                      value={
-                        formData.image?.startsWith('data:')
-                          ? '✅ Завантажено оптимізоване WebP фото'
-                          : formData.image || ''
-                      }
+                      placeholder="/images/products/prod_51.webp"
+                      value={formData.image || ''}
                       onChange={(e) => {
                         setFormData({ ...formData, image: e.target.value });
                         setPreviewImage(e.target.value);
