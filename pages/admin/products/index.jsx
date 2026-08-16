@@ -233,9 +233,12 @@ export default function AdminProductsPage() {
                       <td className="py-3 px-2">
                         <div className="flex items-center gap-3">
                           <img
-                            src={p.image}
+                            src={p.image || '/images/products/placeholder.webp'}
                             alt={p.title}
                             className="w-12 h-12 object-contain bg-white rounded-xl border border-rose-100 p-1 shrink-0"
+                            onError={(e) => {
+                              e.target.src = '/images/products/placeholder.webp';
+                            }}
                           />
                           <div>
                             <div className="font-bold text-slate-800 max-w-sm">{p.title}</div>

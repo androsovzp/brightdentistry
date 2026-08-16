@@ -352,6 +352,9 @@ export default function CheckoutPage() {
                     src={product.image || '/images/products/placeholder.webp'}
                     alt={product.title}
                     className="w-12 h-12 object-contain bg-rose-50 p-1 rounded-lg border border-rose-100 shrink-0"
+                    onError={(e) => {
+                      e.target.src = '/images/products/placeholder.webp';
+                    }}
                   />
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-slate-800 line-clamp-1">{product.title}</div>

@@ -40,7 +40,7 @@ export default function ProductModal() {
               alt={activeModalProduct.title}
               className="max-h-64 object-contain"
               onError={(e) => {
-                e.target.src = 'https://placehold.co/300x300/fce7f3/db2777?text=Bright+Dentistry';
+                e.target.src = '/images/products/placeholder.webp';
               }}
             />
             <div className="absolute top-3 left-3 bg-brand-500 text-white font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">

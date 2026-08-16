@@ -252,9 +252,12 @@ export default function PinkQuizModal() {
                       >
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
                           <img
-                            src={p.image}
+                            src={p.image || '/images/products/placeholder.webp'}
                             alt={p.title}
                             className="w-11 h-11 object-contain bg-white rounded-xl p-1 border border-rose-100 shrink-0"
+                            onError={(e) => {
+                              e.target.src = '/images/products/placeholder.webp';
+                            }}
                           />
                           <div className="min-w-0 flex-1">
                             <div className="text-xs font-bold text-slate-900 leading-tight line-clamp-2">

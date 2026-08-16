@@ -65,7 +65,7 @@ export default function CartDrawer() {
                     alt={product.title}
                     className="w-16 h-16 object-contain bg-rose-50/50 p-1.5 rounded-xl border border-rose-100 shrink-0"
                     onError={(e) => {
-                      e.target.src = 'https://placehold.co/100x100/fce7f3/db2777?text=Bright';
+                      e.target.src = '/images/products/placeholder.webp';
                     }}
                   />
 

@@ -210,9 +210,12 @@ export default function AdminDashboardPage() {
                       <td className="py-3 px-2">
                         <div className="flex items-center gap-3">
                           <img
-                            src={p.image}
+                            src={p.image || '/images/products/placeholder.webp'}
                             alt={p.title}
                             className="w-10 h-10 object-contain bg-white rounded-xl border border-rose-100 p-1"
+                            onError={(e) => {
+                              e.target.src = '/images/products/placeholder.webp';
+                            }}
                           />
                           <div className="font-bold text-slate-800 line-clamp-1 max-w-xs">
                             {p.title}

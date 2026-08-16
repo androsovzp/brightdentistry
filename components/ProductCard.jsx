@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
           alt={product.title}
           className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            e.target.src = 'https://placehold.co/300x300/fce7f3/db2777?text=Bright+Dentistry';
+            e.target.src = '/images/products/placeholder.webp';
           }}
         />
 

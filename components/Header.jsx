@@ -118,9 +118,12 @@ export default function Header() {
                       className="flex items-center gap-3 p-3 hover:bg-rose-50/80 cursor-pointer transition-colors"
                     >
                       <img
-                        src={product.image}
+                        src={product.image || '/images/products/placeholder.webp'}
                         alt={product.title}
                         className="w-12 h-12 object-contain bg-white rounded-lg p-1 border border-rose-100"
+                        onError={(e) => {
+                          e.target.src = '/images/products/placeholder.webp';
+                        }}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="text-xs font-semibold text-slate-800 truncate">
