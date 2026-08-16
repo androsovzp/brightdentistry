@@ -36,14 +36,10 @@ export default async function handler(req, res) {
     }
 
     const prodFileName = `prod_${cleanCode}.webp`;
-    const prodImgFileName = `prod_img_${cleanCode}.webp`;
-
     const prodFilePath = path.join(targetDir, prodFileName);
-    const prodImgFilePath = path.join(targetDir, prodImgFileName);
 
     try {
       fs.writeFileSync(prodFilePath, buffer);
-      fs.writeFileSync(prodImgFilePath, buffer);
     } catch (fsErr) {
       console.warn('Local FS write error (read-only filesystem on Vercel):', fsErr);
     }
