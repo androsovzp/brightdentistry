@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Package,
   Trash2,
+  Loader2,
 } from 'lucide-react';
 
 export default function ProductEditorPage() {
@@ -49,18 +50,21 @@ export default function ProductEditorPage() {
 
   useEffect(() => {
     if (id) {
-      console.log(`🔍 [Product Editor] Fetching product data for ID/code: "${id}"...`);
+      console.log(`🔍 [Product Editor] Loading product data for ID/code: "${id}"...`);
       fetch('/api/admin/products')
         .then((res) => res.json())
         .then((products) => {
           if (Array.isArray(products)) {
             const found = products.find((p) => p.id === id || p.code === String(id));
             if (found) {
-              console.group('🛍️ [Product Editor] Product Loaded Successfully');
+              console.group('🛍️ [Product Editor] Product Loaded');
               console.log('ID:', found.id);
               console.log('Code:', found.code);
               console.log('Title:', found.title);
-              console.log('Stored Image URL:', found.image);
+              console.log('Price:', found.price);
+              console.log('Category:', found.category);
+              console.log('Image:', found.image);
+              console.log('In Stock:', found.inStock);
               console.groupEnd();
 
               setFormData({
@@ -73,10 +77,9 @@ export default function ProductEditorPage() {
                 image: found.image || '',
                 inStock: found.inStock !== undefined ? found.inStock : true,
               });
-              // Set preview to the stored path so existing image is visible
               setPreviewImage(found.image || '');
             } else {
-              console.warn(`⚠️ [Product Editor] Product with ID/code "${id}" not found in catalog.`);
+              console.warn(`⚠️ [Product Editor] Product with ID/code "${id}" not found.`);
             }
           }
         })
@@ -125,64 +128,43 @@ export default function ProductEditorPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    console.group('📁 [Image Upload Step 1] File Selected');
-    console.log('File Name:', file.name);
-    console.log('Original File Size:', `${(file.size / 1024).toFixed(1)} KB`);
-    console.log('MIME Type:', file.type);
-    console.groupEnd();
-
     setUploadingImage(true);
     setMessage({ type: '', text: '' });
 
     try {
-      // Compress image client-side to compact WebP (20-30 KB)
+      // 1. Compress image client-side to compact WebP
       const base64 = await compressImageFile(file, 800, 0.8);
-
-      console.group('🗜️ [Image Upload Step 2] Client Compression Completed');
-      console.log('Output Format: WebP');
-      console.log('Compressed Base64 Length:', `${base64.length} characters`);
-      console.log('Estimated Base64 Payload Size:', `${(base64.length / 1024).toFixed(1)} KB`);
-      console.groupEnd();
-
-      // Show instant local preview AND assign data URI to formData.image
-      // This guarantees 100% reliable image display on Vercel without read-only FS or 404 issues
       setPreviewImage(base64);
-      setFormData((prev) => ({ ...prev, image: base64 }));
-      console.log('✅ [Image Upload] formData.image updated to standalone Base64 WebP Data URI');
 
-      console.group('🌐 [Image Upload Step 3] Sending POST to /api/admin/upload for server sync...');
-      console.log('Target Product Code:', formData.code || '(empty, will use timestamp)');
-      console.log('File Name:', file.name);
-      console.groupEnd();
+      // 2. Upload to server & sync to GitHub
+      const uploadCode = formData.code || Date.now().toString();
+      const fallbackUrl = `/images/products/prod_${String(uploadCode).trim()}.webp`;
+      let serverImageUrl = fallbackUrl;
 
-      // Upload to server: attempts local write in dev and GitHub commit if token is available
       try {
         const res = await fetch('/api/admin/upload', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            code: formData.code || Date.now().toString(),
+            code: uploadCode,
             fileBase64: base64,
             filename: file.name,
           }),
         });
 
         const data = await res.json();
-
-        console.group('📥 [Image Upload Step 4] Server Response Received');
-        console.log('HTTP Status:', res.status, res.statusText);
-        console.log('Response JSON:', data);
-        if (data.debug) {
-          console.log('Server Debug Info:', data.debug);
+        if (data.success && data.url) {
+          serverImageUrl = data.url;
         }
-        console.groupEnd();
       } catch (uploadErr) {
-        console.warn('⚠️ [Image Upload] Server background sync warning:', uploadErr);
+        console.warn('⚠️ [Image Upload] Server sync warning:', uploadErr);
       }
 
-      setMessage({ type: 'success', text: 'Нове фото успішно завантажено! Натисніть "Зберегти товар" нижче.' });
+      setFormData((prev) => ({ ...prev, image: serverImageUrl }));
+      console.log('🖼️ [Image Updated]:', serverImageUrl);
+      setMessage({ type: 'success', text: 'Нове фото успішно оновлено! Натисніть "Зберегти товар".' });
     } catch (err) {
-      console.error('❌ [Image Upload] Fatal upload exception:', err);
+      console.error('❌ [Image Upload] Exception:', err);
       setMessage({ type: 'error', text: 'Помилка обробки або завантаження зображення' });
     } finally {
       setUploadingImage(false);
@@ -204,9 +186,14 @@ export default function ProductEditorPage() {
 
     const method = isEditing ? 'PUT' : 'POST';
 
-    console.group(`💾 [Product Save Step 1] Submitting ${method} /api/admin/products`);
-    console.log('Form Data Payload:', formData);
-    console.log('Image in payload:', formData.image);
+    console.group(`💾 [Product Save] Submitting ${method} /api/admin/products`);
+    console.log('Code:', formData.code);
+    console.log('Title:', formData.title);
+    console.log('Price:', formData.price);
+    console.log('Category:', formData.category);
+    console.log('In Stock:', formData.inStock);
+    console.log('Description:', formData.description);
+    console.log('Image Path:', formData.image);
     console.groupEnd();
 
     try {
@@ -218,17 +205,16 @@ export default function ProductEditorPage() {
 
       const data = await res.json();
 
-      console.group('📥 [Product Save Step 2] Server Response Received');
+      console.group('📥 [Product Save Response]');
       console.log('HTTP Status:', res.status, res.statusText);
-      console.log('Response JSON:', data);
+      console.log('Saved Product Data:', data.product);
       if (data.debug) {
-        console.log('GitHub Token Available:', data.debug.hasGithubToken);
         console.log('GitHub Commit Status:', data.debug.github);
       }
       console.groupEnd();
 
       if (res.ok && data.success) {
-        console.log('🎉 [Product Save] Product saved successfully!');
+        console.log('🎉 [Product Save] Product saved and committed successfully!');
         setMessage({ type: 'success', text: 'Товар успішно збережено!' });
         setTimeout(() => {
           router.push('/admin/products');
@@ -238,7 +224,7 @@ export default function ProductEditorPage() {
         setMessage({ type: 'error', text: data.message || 'Помилка збереження товару' });
       }
     } catch (err) {
-      console.error('❌ [Product Save] Network/Fetch exception:', err);
+      console.error('❌ [Product Save] Network exception:', err);
       setMessage({ type: 'error', text: 'Помилка зв’язку з сервером' });
     } finally {
       setSaving(false);
@@ -261,7 +247,31 @@ export default function ProductEditorPage() {
         </button>
 
         {/* Editor Form Card */}
-        <div className="bg-white rounded-3xl border border-rose-100 p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="bg-white rounded-3xl border border-rose-100 p-6 sm:p-8 shadow-sm space-y-6 relative overflow-hidden">
+          {/* Full Card Loading Overlay */}
+          {(uploadingImage || saving) && (
+            <div className="absolute inset-0 bg-white/85 backdrop-blur-[2px] z-30 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-200">
+              <div className="bg-white border border-rose-100 shadow-xl rounded-3xl p-8 max-w-sm w-full flex flex-col items-center space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-brand-600 shadow-inner">
+                  <Loader2 className="w-7 h-7 animate-spin text-brand-600" />
+                </div>
+                <div className="space-y-1.5">
+                  <h4 className="font-bold text-slate-800 text-sm">
+                    {uploadingImage ? 'Оптимізація та завантаження фото...' : 'Збереження товару...'}
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    {uploadingImage
+                      ? 'Конвертуємо фото у компактний WebP та синхронізуємо з каталогом...'
+                      : 'Оновлюємо дані товару та зберігаємо зміни...'}
+                  </p>
+                </div>
+                <div className="w-full bg-rose-100 h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-gradient-to-r from-brand-500 to-rosebrand-500 h-full rounded-full animate-pulse w-4/5"></div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {message.text && (
               <div
@@ -290,7 +300,10 @@ export default function ProductEditorPage() {
                   type="text"
                   placeholder="Наприклад: 51 або 125"
                   value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, code: e.target.value });
+                    console.log('🔢 [Field: Code]:', e.target.value);
+                  }}
                   required
                   className="w-full px-4 py-2.5 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-2xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
                 />
@@ -306,7 +319,10 @@ export default function ProductEditorPage() {
                 </label>
                 <select
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, category: e.target.value });
+                    console.log('🏷️ [Field: Category]:', e.target.value);
+                  }}
                   required
                   className="w-full px-4 py-2.5 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-2xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer"
                 >
@@ -327,7 +343,10 @@ export default function ProductEditorPage() {
                   type="text"
                   placeholder="Дитяча зубна паста 0-3 роки Brush-Baby..."
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, title: e.target.value });
+                    console.log('✏️ [Field: Title]:', e.target.value);
+                  }}
                   required
                   className="w-full px-4 py-2.5 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-2xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
                 />
@@ -342,7 +361,10 @@ export default function ProductEditorPage() {
                   type="number"
                   placeholder="300"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, price: e.target.value });
+                    console.log('💰 [Field: Price]:', e.target.value);
+                  }}
                   required
                   min="0"
                   className="w-full px-4 py-2.5 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-2xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400"
@@ -355,7 +377,10 @@ export default function ProductEditorPage() {
                   <input
                     type="checkbox"
                     checked={formData.inStock}
-                    onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, inStock: e.target.checked });
+                      console.log('📦 [Field: InStock]:', e.target.checked);
+                    }}
                     className="w-5 h-5 text-brand-600 rounded-lg border-rose-300 focus:ring-brand-400 cursor-pointer"
                   />
                   <span className="text-xs font-bold text-slate-800">Товар є в наявності</span>
@@ -369,7 +394,10 @@ export default function ProductEditorPage() {
                   rows="5"
                   placeholder="Детальний опис, склад, вікові обмеження та спосіб застосування..."
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, description: e.target.value });
+                    console.log('📝 [Field: Description]:', `${e.target.value.slice(0, 40)}...`);
+                  }}
                   className="w-full px-4 py-3 bg-rose-50/50 hover:bg-rose-50 focus:bg-white border border-rose-200 rounded-2xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-400 leading-relaxed"
                 />
               </div>
@@ -382,8 +410,13 @@ export default function ProductEditorPage() {
 
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   {/* Image Preview Box */}
-                  <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/50 flex items-center justify-center p-2 shrink-0 relative group">
-                    {previewImage ? (
+                  <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/50 flex items-center justify-center p-2 shrink-0 relative group overflow-hidden">
+                    {uploadingImage ? (
+                      <div className="flex flex-col items-center justify-center text-brand-600 space-y-2">
+                        <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
+                        <span className="text-[10px] font-bold text-slate-500">Обробка...</span>
+                      </div>
+                    ) : previewImage ? (
                       <>
                         <img
                           src={previewImage}
@@ -415,14 +448,14 @@ export default function ProductEditorPage() {
 
                   {/* Upload Controls */}
                   <div className="flex-1 space-y-2 w-full">
-                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-100 hover:bg-rose-200 text-brand-800 rounded-2xl text-xs font-bold cursor-pointer transition-colors shadow-sm">
+                    <label className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-100 hover:bg-rose-200 text-brand-800 rounded-2xl text-xs font-bold cursor-pointer transition-colors shadow-sm disabled:opacity-50">
                       <Upload className="w-4 h-4" />
                       <span>{uploadingImage ? 'Завантаження...' : 'Завантажити фото з комп’ютера'}</span>
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageFileChange}
-                        disabled={uploadingImage}
+                        disabled={uploadingImage || saving}
                         className="hidden"
                       />
                     </label>
@@ -451,17 +484,18 @@ export default function ProductEditorPage() {
               <button
                 type="button"
                 onClick={() => router.push('/admin/products')}
-                className="px-5 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:bg-rose-50 transition-colors"
+                disabled={saving || uploadingImage}
+                className="px-5 py-2.5 rounded-2xl text-xs font-bold text-slate-600 hover:bg-rose-50 transition-colors disabled:opacity-50"
               >
                 Скасувати
               </button>
               <button
                 type="submit"
-                disabled={saving}
-                className="px-6 py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-2xl font-bold text-xs shadow-pink-soft transition-all flex items-center gap-2"
+                disabled={saving || uploadingImage}
+                className="px-6 py-2.5 bg-gradient-to-r from-brand-500 to-rosebrand-500 hover:from-brand-600 hover:to-rosebrand-600 text-white rounded-2xl font-bold text-xs shadow-pink-soft transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save className="w-4 h-4" />
-                <span>{saving ? 'Збереження...' : 'Зберегти товар'}</span>
+                <span>{uploadingImage ? '⏳ Завантаження фото...' : saving ? '💾 Збереження...' : 'Зберегти товар'}</span>
               </button>
             </div>
           </form>

@@ -10,7 +10,7 @@ export const config = {
   },
 };
 
-async function commitImageToGitHub(fileName, base64Content) {
+async function commitImageToGitHub(fileName, base64Content, retries = 3) {
   const token = process.env.GITHUB_TOKEN;
   const repo = process.env.GITHUB_REPOSITORY || 'androsovzp/brightdentistry';
   if (!token) {
@@ -18,52 +18,77 @@ async function commitImageToGitHub(fileName, base64Content) {
     return { success: false, reason: 'GITHUB_TOKEN not configured' };
   }
 
-  try {
-    const url = `https://api.github.com/repos/${repo}/contents/public/images/products/${fileName}`;
-    console.log(`🌐 [Upload API] Fetching current SHA for GitHub: ${url}`);
+  const filePath = `public/images/products/${fileName}`;
 
-    let sha;
+  for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const getRes = await fetch(url, {
+      const getUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=main&t=${Date.now()}`;
+
+      let sha;
+      try {
+        const getRes = await fetch(getUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github.v3+json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+          cache: 'no-store',
+        });
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          sha = fileData?.sha;
+        }
+      } catch (e) {
+        // File might not exist yet
+      }
+
+      const putUrl = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+      const payload = {
+        message: `admin: upload product image ${fileName}`,
+        content: base64Content,
+      };
+      if (sha) {
+        payload.sha = sha;
+      }
+
+      const putRes = await fetch(putUrl, {
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify(payload),
       });
-      if (getRes.ok) {
-        const fileData = await getRes.json();
-        sha = fileData?.sha;
-        console.log(`ℹ️ [Upload API] Existing file SHA found: ${sha}`);
+
+      const putData = await putRes.json();
+
+      if (putRes.ok) {
+        console.log(`✅ [Upload API] GitHub image commit success on attempt ${attempt} (Status: ${putRes.status})`);
+        return { success: true, status: putRes.status, data: putData, attempt };
       }
-    } catch (e) {
-      console.warn('ℹ️ [Upload API] File does not exist in GitHub yet, will create new.');
+
+      // Handle 409 Conflict with auto-retry
+      if (putRes.status === 409 && attempt < retries) {
+        console.warn(`⚠️ [Upload API] 409 Conflict on attempt ${attempt}. Retrying with fresh SHA...`);
+        await new Promise((r) => setTimeout(r, 300 * attempt));
+        continue;
+      }
+
+      console.error(`❌ [Upload API] GitHub image commit returned error ${putRes.status}:`, putData);
+      return { success: false, status: putRes.status, error: putData.message };
+    } catch (err) {
+      console.error(`❌ [Upload API] GitHub image commit exception on attempt ${attempt}:`, err);
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, 300 * attempt));
+      } else {
+        return { success: false, error: err.message };
+      }
     }
-
-    const payload = {
-      message: `admin: upload product image ${fileName}`,
-      content: base64Content,
-    };
-    if (sha) {
-      payload.sha = sha;
-    }
-
-    const putRes = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const putData = await putRes.json();
-    console.log(`✅ [Upload API] GitHub PUT status: ${putRes.status}`, putData?.commit?.html_url || putData?.message);
-    return { success: putRes.ok, status: putRes.status, data: putData };
-  } catch (err) {
-    console.error('❌ [Upload API] GitHub image commit error:', err);
-    return { success: false, error: err.message };
   }
+
+  return { success: false, reason: 'Max retries exceeded' };
 }
 
 export default async function handler(req, res) {
