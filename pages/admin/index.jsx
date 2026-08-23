@@ -209,14 +209,21 @@ export default function AdminDashboardPage() {
                     <tr key={p.id} className="hover:bg-rose-50/50 transition-colors">
                       <td className="py-3 px-2">
                         <div className="flex items-center gap-3">
-                          <img
-                            src={p.image || '/images/products/placeholder.webp'}
-                            alt={p.title}
-                            className="w-10 h-10 object-contain bg-white rounded-xl border border-rose-100 p-1"
-                            onError={(e) => {
-                              e.target.src = '/images/products/placeholder.webp';
-                            }}
-                          />
+                          <div className="relative shrink-0">
+                            <img
+                              src={p.image || (p.images && p.images[0]) || '/images/products/placeholder.webp'}
+                              alt={p.title}
+                              className="w-10 h-10 object-contain bg-white rounded-xl border border-rose-100 p-1"
+                              onError={(e) => {
+                                e.target.src = '/images/products/placeholder.webp';
+                              }}
+                            />
+                            {Array.isArray(p.images) && p.images.length > 1 && (
+                              <span className="absolute -bottom-1 -right-1 bg-brand-600 text-white text-[8px] font-bold px-1 py-0.2 rounded-full">
+                                {p.images.length}
+                              </span>
+                            )}
+                          </div>
                           <div className="font-bold text-slate-800 line-clamp-1 max-w-xs">
                             {p.title}
                           </div>

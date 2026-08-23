@@ -28,13 +28,20 @@ export default function ProductCard({ product }) {
       {/* Image Container with Eye Hover action */}
       <div className="relative w-full h-48 bg-gradient-to-b from-rose-50/40 to-white rounded-2xl overflow-hidden mb-3 p-3 flex items-center justify-center">
         <img
-          src={product.image || '/images/products/placeholder.webp'}
+          src={product.image || (product.images && product.images[0]) || '/images/products/placeholder.webp'}
           alt={product.title}
           className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
             e.target.src = '/images/products/placeholder.webp';
           }}
         />
+
+        {/* Multi-Photo Count Badge */}
+        {Array.isArray(product.images) && product.images.length > 1 && (
+          <div className="absolute bottom-2 left-2 bg-slate-900/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
+            <span>📸 {product.images.length}</span>
+          </div>
+        )}
 
         {/* Quick View Eye Button */}
         <button

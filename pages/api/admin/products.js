@@ -179,7 +179,7 @@ export default async function handler(req, res) {
   const { products, sha } = await getLiveProducts();
 
   if (req.method === 'POST') {
-    const { code, title, category, price, description, image, inStock } = req.body || {};
+    const { code, title, category, price, description, image, images, inStock } = req.body || {};
 
     console.log('➕ [Products API POST] Creating new product:', { code, title, category, price });
 
@@ -191,10 +191,26 @@ export default async function handler(req, res) {
     const cleanCode = String(code).trim();
     const productId = `p_${cleanCode}`;
     
-    // Sanitize image: ensure it never saves raw base64 data URI
-    let imagePath = image || `/images/products/prod_${cleanCode}.webp`;
+    // Sanitize images array and primary image
+    let sanitizedImages = [];
+    if (Array.isArray(images) && images.length > 0) {
+      sanitizedImages = images
+        .filter((img) => typeof img === 'string' && img.trim().length > 0)
+        .map((img, idx) => {
+          if (img.startsWith('data:image/')) {
+            return `/images/products/prod_${cleanCode}_${Date.now()}_${idx}.webp`;
+          }
+          return img.trim();
+        });
+    }
+
+    let imagePath = image || (sanitizedImages.length > 0 ? sanitizedImages[0] : `/images/products/prod_${cleanCode}.webp`);
     if (typeof imagePath === 'string' && imagePath.startsWith('data:image/')) {
-      imagePath = `/images/products/prod_${cleanCode}.webp`;
+      imagePath = sanitizedImages[0] || `/images/products/prod_${cleanCode}.webp`;
+    }
+
+    if (sanitizedImages.length === 0 && imagePath) {
+      sanitizedImages = [imagePath];
     }
 
     const newProduct = {
@@ -206,6 +222,7 @@ export default async function handler(req, res) {
       price: numPrice,
       priceFormatted: `${numPrice} грн`,
       image: imagePath,
+      images: sanitizedImages,
       inStock: inStock !== undefined ? Boolean(inStock) : true,
     };
 
@@ -231,7 +248,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const { id, code, title, category, price, description, image, inStock } = req.body || {};
+    const { id, code, title, category, price, description, image, images, inStock } = req.body || {};
 
     console.log('✏️ [Products API PUT] Updating product:', { id, code, title, category, price, inStock });
 
@@ -247,10 +264,27 @@ export default async function handler(req, res) {
     const current = products[index];
     const numPrice = price !== undefined ? Number(price) : current.price;
 
-    // Sanitize image: ensure it never saves raw base64 data URI
-    let imagePath = image !== undefined ? image : current.image;
+    // Sanitize images array
+    let sanitizedImages = current.images || (current.image ? [current.image] : []);
+    if (images !== undefined && Array.isArray(images)) {
+      sanitizedImages = images
+        .filter((img) => typeof img === 'string' && img.trim().length > 0)
+        .map((img, idx) => {
+          if (img.startsWith('data:image/')) {
+            return `/images/products/prod_${current.code || code}_${Date.now()}_${idx}.webp`;
+          }
+          return img.trim();
+        });
+    }
+
+    // Sanitize primary image
+    let imagePath = image !== undefined ? image : (sanitizedImages.length > 0 ? sanitizedImages[0] : current.image);
     if (typeof imagePath === 'string' && imagePath.startsWith('data:image/')) {
-      imagePath = `/images/products/prod_${current.code || code}.webp`;
+      imagePath = sanitizedImages[0] || current.image || `/images/products/prod_${current.code || code}.webp`;
+    }
+
+    if (sanitizedImages.length === 0 && imagePath) {
+      sanitizedImages = [imagePath];
     }
 
     const updatedProduct = {
@@ -261,6 +295,7 @@ export default async function handler(req, res) {
       price: numPrice,
       priceFormatted: `${numPrice} грн`,
       image: imagePath,
+      images: sanitizedImages,
       inStock: inStock !== undefined ? Boolean(inStock) : current.inStock,
     };
 
