@@ -282,11 +282,14 @@
     "title": "Зубна паста Biorepair Oral Care Total Protective Repair Абсолютний захист та відновлення",
     "category": "Дорослі пасти",
     "description": "Зубна паста Biorepair Oral Care Total Protective Repair Абсолютний захист і відновлення ефективно та делікатно очищає, забезпечує додатковий догляд, зберігає свіжий подих.\nЯк діє?\nПаста містить комплекс microRepair®, що складається з мікрочастинок, його формула дуже схожа на склад зубної емалі. Не містить фториду, оксиду титану, лаурилсульфат натрію та парабенів. Регулярне використання продукту сприяє відновленню поверхні емалі, захищає від нальоту, утворення зубного каменю та тріщин.\nЗ чим використовувати?\nВикористовуйте зубну пасту Total Protective Repair в комплексі з ополіскувачем для порожнини рота з microRepair® від Biorepair, щоб забезпечити зубам та яснам додатковий догляд і відновлення.\nСклад товару Зубна паста Biorepair Oral Care Total Protective Repair Абсолютний захист та відновлення, 75 мл\nAqua, Zinc Hydroxyapatite15% (microRepair), Glycerin, Sorbitol, Hydrated Silica, Silica, Aroma, Cellulose Gum, Tetrapotassium Pyrophosphate, Sodium Myristoyl Sarcosinate, Sodium Methyl Cocoyl Taurate, Sodium Saccharin, Citric Acid, Sodium Benzoate.\nЯк використовувати Зубна паста Biorepair Oral Care Total Protective Repair Абсолютний захист та відновлення, 75 мл\nНевелику кількість пасти (розміром з горошину) нанесіть на зубну щітку. Чистьте зуби впродовж 2-х хвилин, після чого прополощіть рот водою. Посміхніться! Не забувайте чистити зуби двічі на день і міняти зубну щітку кожні 3 місяці.",
-    "price": 300,
-    "priceFormatted": "300 грн",
+    "price": 317,
+    "priceFormatted": "317 грн",
     "image": "/images/products/prod_96.webp",
     "inStock": true,
-    "row": 111
+    "row": 111,
+    "images": [
+      "/images/products/prod_96.webp"
+    ]
   },
   {
     "id": "p_дор_90",
