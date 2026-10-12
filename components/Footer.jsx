@@ -134,7 +134,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2 text-[10px]">
                 <span className="bg-slate-800 px-2 py-1 rounded text-slate-300 font-medium border border-slate-700">
-                  Оплата при отриманні
+                  Передоплата на картку
                 </span>
                 <span className="bg-slate-800 px-2 py-1 rounded text-slate-400 font-medium border border-slate-700">
                   monobank

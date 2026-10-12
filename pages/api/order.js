@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       customer,
       items,
       totalPrice,
-      paymentMethod: paymentMethod || 'Оплата при отриманні',
+      paymentMethod: paymentMethod || 'Передоплата на картку',
       deliveryMethod: deliveryMethod || 'Нова Пошта',
       createdAt: new Date().toISOString(),
     };

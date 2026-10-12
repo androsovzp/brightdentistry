@@ -18,7 +18,7 @@ export default function CheckoutPage() {
     notes: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('Оплата при отриманні');
+  const [paymentMethod, setPaymentMethod] = useState('Передоплата на картку');
   const [deliveryMethod, setDeliveryMethod] = useState('Нова Пошта');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -305,13 +305,13 @@ export default function CheckoutPage() {
                     <input
                       type="radio"
                       name="payment"
-                      checked={paymentMethod === 'Оплата при отриманні'}
-                      onChange={() => setPaymentMethod('Оплата при отриманні')}
+                      checked={paymentMethod === 'Передоплата на картку'}
+                      onChange={() => setPaymentMethod('Передоплата на картку')}
                       className="w-4 h-4 text-brand-600 focus:ring-brand-500"
                     />
                     <div>
-                      <div className="text-xs font-bold text-slate-900">Оплата при отриманні (накладений платіж)</div>
-                      <div className="text-[11px] text-slate-500">Оплачуйте замовлення після огляду на Новій Пошті</div>
+                      <div className="text-xs font-bold text-slate-900">Повна передоплата на картку</div>
+                      <div className="text-[11px] text-slate-500">Реквізити надішле менеджер після підтвердження замовлення</div>
                     </div>
                   </div>
                   <CreditCard className="w-5 h-5 text-brand-500" />
