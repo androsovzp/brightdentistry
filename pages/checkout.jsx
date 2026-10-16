@@ -3,7 +3,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCart } from '@/lib/store';
-import { ArrowLeft, ShoppingBag, Truck, CreditCard, CheckCircle2, AlertCircle, Sparkles, Send } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Truck, Store, CreditCard, CheckCircle2, AlertCircle, Sparkles, Send } from 'lucide-react';
+
+const PICKUP = 'Самовивіз';
+const PICKUP_ADDRESS = 'м. Вінниця, вул. Івана Богуна, 2';
+const PREPAYMENT = 'Передоплата на картку';
+const PAY_AT_CLINIC = 'Оплата в клініці при отриманні';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -18,7 +23,7 @@ export default function CheckoutPage() {
     notes: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('Передоплата на картку');
+  const [paymentMethod, setPaymentMethod] = useState(PREPAYMENT);
   const [deliveryMethod, setDeliveryMethod] = useState('Нова Пошта');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -33,7 +38,12 @@ export default function CheckoutPage() {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!formData.firstName.trim() || !formData.phone.trim() || !formData.city.trim() || !formData.warehouse.trim()) {
+    const isPickup = deliveryMethod === PICKUP;
+    if (
+      !formData.firstName.trim() ||
+      !formData.phone.trim() ||
+      (!isPickup && (!formData.city.trim() || !formData.warehouse.trim()))
+    ) {
       setErrorMessage("Будь ласка, заповніть усі обов'язкові поля (*)");
       return;
     }
@@ -52,7 +62,7 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          customer: formData,
+          customer: deliveryMethod === PICKUP ? { ...formData, city: '', warehouse: '' } : formData,
           items: cart,
           totalPrice,
           paymentMethod,
@@ -110,7 +120,11 @@ export default function CheckoutPage() {
           </div>
           <div className="flex justify-between">
             <span className="text-slate-500">Доставка:</span>
-            <span className="font-semibold text-slate-800">{formData.city}, {formData.warehouse}</span>
+            <span className="font-semibold text-slate-800">
+              {deliveryMethod === PICKUP
+                ? `Самовивіз: ${PICKUP_ADDRESS}`
+                : `${formData.city}, ${formData.warehouse}`}
+            </span>
           </div>
           <div className="flex justify-between border-t border-rose-50 pt-2 font-bold text-sm">
             <span>Сума до сплати:</span>
@@ -242,9 +256,50 @@ export default function CheckoutPage() {
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-rose-100 shadow-sm space-y-4">
               <h3 className="font-heading font-bold text-slate-800 text-base flex items-center gap-2 border-b border-rose-50 pb-3">
                 <span className="w-7 h-7 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-extrabold text-xs">2</span>
-                Доставка (Нова Пошта)
+                Спосіб отримання
               </h3>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { value: 'Нова Пошта', title: 'Нова Пошта', hint: 'Доставка у відділення або поштомат', Icon: Truck },
+                  { value: PICKUP, title: 'Самовивіз з клініки', hint: PICKUP_ADDRESS, Icon: Store },
+                ].map(({ value, title, hint, Icon }) => (
+                  <label
+                    key={value}
+                    className={`flex items-center justify-between gap-3 p-4 rounded-2xl cursor-pointer transition-colors ${
+                      deliveryMethod === value
+                        ? 'border-2 border-brand-500 bg-rose-50/50'
+                        : 'border border-slate-200 bg-white hover:border-brand-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="delivery"
+                        checked={deliveryMethod === value}
+                        onChange={() => {
+                          setDeliveryMethod(value);
+                          if (value !== PICKUP) setPaymentMethod(PREPAYMENT);
+                        }}
+                        className="w-4 h-4 text-brand-600 focus:ring-brand-500"
+                      />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900">{title}</div>
+                        <div className="text-[11px] text-slate-500">{hint}</div>
+                      </div>
+                    </div>
+                    <Icon className="w-5 h-5 text-brand-500 shrink-0" />
+                  </label>
+                ))}
+              </div>
+
+              {deliveryMethod === PICKUP ? (
+                <div className="p-4 rounded-2xl bg-rose-50/40 border border-rose-100 text-[11px] text-slate-600 leading-relaxed">
+                  Забрати замовлення можна в клініці Bright Dentistry за адресою <strong>{PICKUP_ADDRESS}</strong>.
+                  <br />
+                  Графік: Пн – Пт 09:00 – 19:00, Сб – Нд 09:00 – 16:00. Менеджер зателефонує, коли замовлення буде готове.
+                </div>
+              ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -276,6 +331,7 @@ export default function CheckoutPage() {
                   />
                 </div>
               </div>
+              )}
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -300,22 +356,36 @@ export default function CheckoutPage() {
               </h3>
 
               <div className="space-y-3">
-                <label className="flex items-center justify-between p-4 rounded-2xl border-2 border-brand-500 bg-rose-50/50 cursor-pointer">
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'Передоплата на картку'}
-                      onChange={() => setPaymentMethod('Передоплата на картку')}
-                      className="w-4 h-4 text-brand-600 focus:ring-brand-500"
-                    />
-                    <div>
-                      <div className="text-xs font-bold text-slate-900">Повна передоплата на картку</div>
-                      <div className="text-[11px] text-slate-500">Реквізити надішле менеджер після підтвердження замовлення</div>
+                {[
+                  { value: PREPAYMENT, title: 'Повна передоплата на картку', hint: 'Реквізити надішле менеджер після підтвердження замовлення', Icon: CreditCard },
+                  ...(deliveryMethod === PICKUP
+                    ? [{ value: PAY_AT_CLINIC, title: 'Оплата в клініці', hint: 'Готівкою або карткою під час отримання замовлення', Icon: Store }]
+                    : []),
+                ].map(({ value, title, hint, Icon }) => (
+                  <label
+                    key={value}
+                    className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors ${
+                      paymentMethod === value
+                        ? 'border-2 border-brand-500 bg-rose-50/50'
+                        : 'border border-slate-200 bg-white hover:border-brand-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="payment"
+                        checked={paymentMethod === value}
+                        onChange={() => setPaymentMethod(value)}
+                        className="w-4 h-4 text-brand-600 focus:ring-brand-500"
+                      />
+                      <div>
+                        <div className="text-xs font-bold text-slate-900">{title}</div>
+                        <div className="text-[11px] text-slate-500">{hint}</div>
+                      </div>
                     </div>
-                  </div>
-                  <CreditCard className="w-5 h-5 text-brand-500" />
-                </label>
+                    <Icon className="w-5 h-5 text-brand-500 shrink-0" />
+                  </label>
+                ))}
 
                 <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 bg-slate-50 opacity-60 cursor-not-allowed">
                   <div className="flex items-center gap-3">

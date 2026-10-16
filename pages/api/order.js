@@ -19,7 +19,8 @@ export default async function handler(req, res) {
       customer,
       items,
       totalPrice,
-      paymentMethod: paymentMethod || 'Передоплата на картку',
+      // Paying at the clinic is only possible with pickup
+      paymentMethod: deliveryMethod === 'Самовивіз' && paymentMethod ? paymentMethod : 'Передоплата на картку',
       deliveryMethod: deliveryMethod || 'Нова Пошта',
       createdAt: new Date().toISOString(),
     };
