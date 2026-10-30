@@ -136,6 +136,17 @@ async function processSingleImage(cleanCode, fileBase64, filename, suffix = null
   };
 }
 
+// On Vercel the filesystem is read-only, so only a GitHub commit persists the image.
+function isImagePersisted(result) {
+  return process.env.VERCEL ? result.github.success : result.github.success || result.localWrite.success;
+}
+
+function imagePersistErrorMessage(result) {
+  const gh = result.github;
+  const reason = gh.error || gh.reason || `HTTP ${gh.status || '?'}`;
+  return `Фото ${result.fileName} НЕ збережено в GitHub (${reason}). Перевірте GITHUB_TOKEN у налаштуваннях Vercel.`;
+}
+
 export default async function handler(req, res) {
   console.log(`\n📥 [Upload API] Received ${req.method} request`);
 
@@ -166,6 +177,11 @@ export default async function handler(req, res) {
         results.push(result);
       }
 
+      const failed = results.find((r) => !isImagePersisted(r));
+      if (failed) {
+        return res.status(502).json({ message: imagePersistErrorMessage(failed), results });
+      }
+
       const urls = results.map((r) => r.url);
       console.log(`🎯 [Upload API] Batch uploaded ${urls.length} images:`, urls);
 
@@ -189,6 +205,9 @@ export default async function handler(req, res) {
     }
 
     const result = await processSingleImage(cleanCode, fileBase64, filename, suffix);
+    if (!isImagePersisted(result)) {
+      return res.status(502).json({ message: imagePersistErrorMessage(result), result });
+    }
     console.log(`🎯 [Upload API] Single image uploaded: ${result.url}`);
 
     return res.status(200).json({

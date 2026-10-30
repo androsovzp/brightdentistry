@@ -76,6 +76,9 @@ export default function AdminProductsPage() {
         setProducts((prev) =>
           prev.map((p) => (p.id === product.id ? { ...p, inStock: newStockState } : p))
         );
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.message || 'Не вдалося змінити наявність товару');
       }
     } catch (e) {
       console.error('Toggle stock error:', e);
@@ -95,6 +98,9 @@ export default function AdminProductsPage() {
 
       if (res.ok) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.message || 'Не вдалося видалити товар');
       }
     } catch (e) {
       console.error('Delete product error:', e);

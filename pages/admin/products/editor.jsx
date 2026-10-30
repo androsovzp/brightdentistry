@@ -20,6 +20,18 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+const EMPTY_FORM = {
+  id: '',
+  code: '',
+  title: '',
+  category: 'Дитячі пасти',
+  price: '',
+  description: '',
+  image: '',
+  images: [],
+  inStock: true,
+};
+
 export default function ProductEditorPage() {
   const router = useRouter();
   const { id } = router.query;
@@ -27,17 +39,7 @@ export default function ProductEditorPage() {
   const fileInputRef = useRef(null);
 
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({
-    id: '',
-    code: '',
-    title: '',
-    category: 'Дитячі пасти',
-    price: '',
-    description: '',
-    image: '',
-    images: [],
-    inStock: true,
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0, text: '' });
@@ -57,6 +59,14 @@ export default function ProductEditorPage() {
       })
       .catch((e) => console.error(e));
   }, []);
+
+  useEffect(() => {
+    // Switching from "edit" to "add" reuses this page instance — start with a clean form
+    if (router.isReady && !id) {
+      setFormData(EMPTY_FORM);
+      setMessage({ type: '', text: '' });
+    }
+  }, [router.isReady, id]);
 
   useEffect(() => {
     if (id) {

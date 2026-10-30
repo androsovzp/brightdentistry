@@ -37,9 +37,25 @@ function writeLocalProducts(products) {
   }
   try {
     fs.writeFileSync(PRODUCTS_FILE_PUBLIC, jsonStr, 'utf8');
+    return true;
   } catch (e) {
     // Read-only on Vercel
+    return false;
   }
+}
+
+// Saves the catalog locally and to GitHub. On Vercel the filesystem is read-only
+// (and ephemeral), so only a successful GitHub commit means the change persisted.
+async function persistProducts(products, sha) {
+  const localSaved = writeLocalProducts(products);
+  const github = await commitToGitHub(products, sha);
+  const persisted = process.env.VERCEL ? github.success : github.success || localSaved;
+  return { persisted, localSaved, github };
+}
+
+function persistErrorMessage(github) {
+  const reason = github.error || github.reason || `HTTP ${github.status || '?'}`;
+  return `Зміни НЕ збережено: не вдалося записати каталог у GitHub (${reason}). Перевірте GITHUB_TOKEN у налаштуваннях Vercel.`;
 }
 
 async function getLiveProducts() {
@@ -226,16 +242,20 @@ export default async function handler(req, res) {
       inStock: inStock !== undefined ? Boolean(inStock) : true,
     };
 
-    // Check if code already exists
-    const existingIndex = products.findIndex((p) => p.code === cleanCode || p.id === productId);
-    if (existingIndex >= 0) {
-      products[existingIndex] = { ...products[existingIndex], ...newProduct };
-    } else {
-      products.unshift(newProduct);
+    // Never silently overwrite another product with the same code
+    const existing = products.find((p) => p.code === cleanCode || p.id === productId);
+    if (existing) {
+      return res.status(409).json({
+        message: `Товар з кодом "${cleanCode}" вже існує ("${existing.title}"). Вкажіть інший код або відредагуйте наявний товар.`,
+      });
     }
 
-    writeLocalProducts(products);
-    const githubResult = await commitToGitHub(products, sha);
+    products.unshift(newProduct);
+
+    const { persisted, github: githubResult } = await persistProducts(products, sha);
+    if (!persisted) {
+      return res.status(502).json({ message: persistErrorMessage(githubResult), debug: { github: githubResult } });
+    }
 
     return res.status(200).json({
       success: true,
@@ -256,7 +276,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Вкажіть ID або Код товару' });
     }
 
-    const index = products.findIndex((p) => p.id === id || p.code === String(code));
+    // Match by id first: codes are not guaranteed unique, so "id OR code" could hit another product
+    const index = id
+      ? products.findIndex((p) => p.id === id)
+      : products.findIndex((p) => p.code === String(code));
     if (index === -1) {
       return res.status(404).json({ message: 'Товар не знайдено' });
     }
@@ -300,8 +323,11 @@ export default async function handler(req, res) {
     };
 
     products[index] = updatedProduct;
-    writeLocalProducts(products);
-    const githubResult = await commitToGitHub(products, sha);
+
+    const { persisted, github: githubResult } = await persistProducts(products, sha);
+    if (!persisted) {
+      return res.status(502).json({ message: persistErrorMessage(githubResult), debug: { github: githubResult } });
+    }
 
     return res.status(200).json({
       success: true,
@@ -328,8 +354,10 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: 'Товар не знайдено' });
     }
 
-    writeLocalProducts(filtered);
-    await commitToGitHub(filtered, sha);
+    const { persisted, github: githubResult } = await persistProducts(filtered, sha);
+    if (!persisted) {
+      return res.status(502).json({ message: persistErrorMessage(githubResult), debug: { github: githubResult } });
+    }
 
     return res.status(200).json({ success: true, message: 'Товар видалено' });
   }
