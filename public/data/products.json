@@ -1084,8 +1084,11 @@
     "price": 3500,
     "priceFormatted": "3500 грн",
     "image": "/images/products/prod_121.webp",
-    "inStock": true,
-    "row": 570
+    "inStock": false,
+    "row": 570,
+    "images": [
+      "/images/products/prod_121.webp"
+    ]
   },
   {
     "id": "p_дод_122",
